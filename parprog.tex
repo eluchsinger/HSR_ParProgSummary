@@ -51,21 +51,38 @@
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{lightgrey}{gray}{0.6}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 
+\lstdefinelanguage{JavaScript}{
+	keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, let, void, while, with},
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]',
+	morestring=[b]",
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywordstyle=\color{purple}\bfseries,
+	identifierstyle=\color{black},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	sensitive=true
+}
 
 \lstset{ %
-  backgroundcolor=\color{white},   % choose the background 
-  basicstyle=\linespread{0.9}\scriptsize,
-  language=Java,
-  keywordstyle=\color{blue},       % keyword style
-  commentstyle=\color{mygreen},       % keyword style
-  stringstyle=\color{mymauve},
-  frame=single,
-  framerule=1px,
-  rulecolor=\color{spec_gray}, 
-  aboveskip=\smallskipamount, 
-  belowskip=\smallskipamount,       % 
-  tabsize=2,	                   % sets default tabsize to 2 
+	backgroundcolor=\color{white},   % choose the background 
+	basicstyle=\linespread{0.9}\scriptsize,
+	language=JavaScript,
+	keywordstyle=\color{blue},       % keyword style
+	commentstyle=\color{mygreen},       % keyword style
+	stringstyle=\color{mymauve},
+	frame=single,
+	framerule=1px,
+	rulecolor=\color{spec_gray}, 
+	aboveskip=\smallskipamount, 
+	belowskip=\smallskipamount,       % 
+	tabsize=2,	                   % sets default tabsize to 2 
 }
 
 %\usepackage[retainorgcmds]{IEEEtrantools} %IEEEeqnarray
@@ -181,80 +198,71 @@
 
 
 
-\titletopic{ParProg ZF \qquad \today
-\\ Kiru \& Styp \\
-HSR FS15 \qquad Prof. Luc Bläser}
+\titletopic{WED3 Zusammenfassung \qquad \today \\ HSR FS17}
 %\qquad \LaTeX{} Design Martin Stypinski
-\maintopic{Begriffe}
+\maintopic{Introduction of Web}
+\subtopic{Benefits}
 \begin{tight-itemize}
-	\item{\textbf{Prozess} - Schwergewichtsprozess \\
-	Parallel laufende Programm-Instanz im System, Eigener Adressraum pro Prozess}
-	\item{\textbf{Thread} - Leichtgewichtsprozess \\
-	Parallele Ablaufsequenz innerhalb eines Programms, Teilen gleichen Adressraum im Prozess}
-	\item{\textbf{Kontextwechsel: Synchron}	Warten auf Bedingung}
-	\item{\textbf{Kontextwechsel: Asynchron} Nach gewisser Zeit soll der Thread den Prozessor freigeben, Verhindere, dass ein Thread dauerhaft Prozessor belegt}
-	\item{\textbf{Multi-Tasking: Kooperativ} Scheduler kann den Thread nicht unterbrechen, Kontextwechsel wird asynchron initiiert.}
-	\item{\textbf{Multi-Tasking: Preemptiv}
-	Scheduler kann per Timer-Interrupt unterbrechen (asynchron), Time-Sliced Scheduling.}
+	\item{No need for backup} 
+	\item{Platform independent} 
+	\item{No software update} 
+	\item{Lower investment costs} 
+	\item{Software as a Service} 
+\end{tight-itemize}
+\subtopic{Liabilities}
+\begin{tight-itemize}
+	\item{No data sovereignity}
+	\item{Limited calibration possibilities} 
+	\item{Limited/restricted hardware access} 
+	\item{No operation system access} 
+	\item{More expensive deployment strategies} 
 \end{tight-itemize}
 %\begin{center} %
 %	\includegraphics[width=0.15\textwidth]{img/thread_model.png}
 %\end{center}
-\maintopic{Thread}
-\begin{lstlisting}
-public class First implements Runnable{
-  @Override
-  public void run(){}
-}
-public class Second extends Thread{
-  @Override public void run(){}
-}
-public static void main(int implicitFinal, final int explicitFinal){
-  new Thread(new First()).start();
-  new Second().start();
-  new Thread(() -> { int b = implicitFinal}).start();
-  new Thread(new Runnable(){
-  @Override public void run(){ int a = expicitFinal; } 
-  }).start();
-}
-public void threadMethods(){
-  Thread.sleep(10); // Running -> wait 10ms -> Ready
-  Thread.yield(); // Running -> Ready
-  
-  Thread t = new Second();
-  t.start(); // asynchron
-  t.interrupt(); // Von aussen unterbrechen, fals kooperativs Canceling (dirty).
-  
-  t.join(); // wait till t terminates
-  boolean isFalse = t.isAlive();
-
-  Thread current = Thread.currentThread();
-  current.setDeamon(boolean on) // Deamon Thread
-}
-\end{lstlisting}
-\maintopic{Failures - not good topic}
+\maintopic{What is Routing?}
 \begin{tight-itemize}
-	\item{\textbf{Race Condition:} Zwei Threads verändern die gleiche Variable. Aenderungen werden überschrieben. Data Races (low-level), Semantisch höhere Race Conditions (high-level) - set(get+1);}
-	\item{\textbf{Deadlocks:} Gegenseitiges Aussperren von Threads. Threads blockieren sich}
-	\item{\textbf{Data Race:} Unsynchronisierter Zugriff auf gleichen Speicher. Mindestens ein Write!}
-	\item{\textbf{Starvation:} Kontinuierliche-Fortschrittsbehinderung von Threads wegen Fairness-Problemen. Andere Threades überholen mich.}
-	\item{\textbf{Starvation Vermeidung:} Länger wartende Threads bevorzugen \& fairness...}
-	\item{\textbf{Priority Inversion:} Hoch prioritärer Thread wartet auf Bedingung von tief prioritärem Thread}
-	\item{\textbf{Critical Section:} Nur von einem Thread zur gleichen Zeit ausführbar}
-	\item{\textbf{Mutual Exclusion:} Gegenseitiger Ausschluss, wichtig bei Ciritical Section.}
-	\item{Verzichtbare Fälle: \\
-	Immutability: Unveränderlichbare Objekte mit NUR lesendem Zugriff \\
-	Confinement: Objekt gehört nur einem Thread zu einer Zeit.}
-	\item{Thread Confinement: Objekt nur über Referenz von einem Thread erreichbar}
-	\item{Object Confinement: Objekt in anderem bereits synchronisierten Objekt eingekapselt}
-	\item{\textbf{Livelock:} Threads haben sich permanent gegenseitig blockiert - Deadlock durch Bedingung}
-	\item{\textbf{Deadlock Vermeidung:} Lineare Ordnung, nur geschachtelt in aufsteigender Reihenfolge auf die Resourcen zugreifen. Oder Grobgranulare locks.}
-	\item{\textbf{Parallele Korrektheit:} Keine Deadlocks, keine Race Conditions, keine Starvation}
-	\item{\textbf{Overrun issue:} if->while. Falls aufgeweckt, kann anderer Thread in der zwischenzeit ändern.}
+	\item{Links multiple application parts together}
+	\item{Provides the concept of information architecture (IA)}
 \end{tight-itemize}
-
-\maintopic{Synchronisationsprimitiven}
-\subtopic{Monitor = synchronized}
+\subtopic{Basics}
+\begin{tight-itemize}
+	\item{Routing is accomplished \textbf{completely} client-side}
+	\begin{tight-itemize}
+		\item{No page reload, no roundtrip, server isn't involved}
+		\item{Page transition is managed by JS completely}
+		\item{Working back-button and bookmarks}
+	\end{tight-itemize}
+	\item{Entry Point [View UI controller] is enforced by the given route}
+	\begin{tight-itemize}
+		\item{Controller provides features behind a View (UI) and bootstraps it}
+	\end{tight-itemize}
+	\item{Router provides client-side event hooks during navigation} - Lifecycle management
+\end{tight-itemize}
+\subtopic{Client-side routing concepts}
+\begin{tight-itemize}
+	\item{\textbf{The old way}} - Earlier, we used anchors (\#). Don't use these anymore!
+	\item{\textbf{The HTML5 way}}
+	\begin{tight-itemize}
+		\item{JavaScript API {\tt window.history } is used}
+		\item{{\tt window.history.pushState} causes the address bar to show the URL, but won't cause the browser to load it (or even check, if it's valid)}
+		\item{{\tt window.onpopstate} can be used to listen for route changes}
+		\item{\textbf{warning:} configuration adjustments needed on server-side (all sub-routes must return root-files)}
+	\end{tight-itemize}
+\end{tight-itemize}
+\subtopic{Example routeConfig}
+\lstinputlisting[language=JavaScript]{./sourcecode/routing/routeConfig.js}
+\maintopic{Data Bindings}
+\lstinputlisting[language=HTML]{./sourcecode/bindings/example_binding.html}
+\lstinputlisting[language=JavaScript]{./sourcecode/bindings/example_binding.js}
+\maintopic{Services}
+\begin{tight-itemize}
+	\item{...contain the major application logic}
+	\item{...are generally the source of all application data \textbf{Data Services}}
+	\item{Provide microtesting of smalles possible logic units}
+	\item{Completely decoupled from UI}
+	\item{\textbf{UI Services}} are usually seen in the communication between UI controllers.
+\end{tight-itemize}
 \begin{lstlisting}
 class BoundedBuffer<T> {
     private Queue<T> queue = new LinkedList<>();
