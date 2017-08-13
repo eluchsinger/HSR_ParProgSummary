@@ -65,7 +65,7 @@
 	keywordstyle=\color{blue}\bfseries,
 	ndkeywordstyle=\color{purple}\bfseries,
 	identifierstyle=\color{black},
-	commentstyle=\color{purple}\ttfamily,
+	commentstyle=\color{mygreen}\ttfamily,
 	stringstyle=\color{red}\ttfamily,
 	sensitive=true
 }
@@ -263,80 +263,22 @@
 	\item{Completely decoupled from UI}
 	\item{\textbf{UI Services}} are usually seen in the communication between UI controllers.
 \end{tight-itemize}
-\begin{lstlisting}
-class BoundedBuffer<T> {
-    private Queue<T> queue = new LinkedList<>();
-    int limit; // initialize in constructor
-
-    public synchronized void put(T x) throws InterruptedException {
-        while (queue.size() == limit) {
-            wait(); // await non-full
-        }
-        queue.add(x);
-        notifyAll(); // signal non-empty
-    }
-    public synchronized T get() throws InterruptedException {
-        while (queue.size() == 0) {
-            wait(); // await non-empty
-        }
-        T x = queue.remove();
-        notifyAll(); // signal non-full
-        return x;
-    }
-    /* Nur put oder get kann gleichzeitig ausgefuehrt werden,
-    synchronized 'markiert' critical section. */
-}
-
-class Syntax {
-    public static void synchronized classLock(){ }
-    public        void synchronized objectLock() {}     
-    public void synchronized sameSytax(){ 
-      synchronized(this){ } // this = monitorObject, objectLock
-      synchronized(Syntax.class){} // class lock
-      nestedLock(); // works because I'have the lock
-    }
-    public void synchronized nestedLock(){
-       try{
-       Thread.sleep(1); // gibt lock nicht frei
-       Thread.yield(); // gibt lock nicht frei
-       wait(); // gibt alle gehaltenen Locks frei
-       notifyAll(); // signal and continue, 
-                    // weckt alle wartenden Threads auf
-       notify(); // signal and continue, weckt irgendein Thread auf
-       }catch(InterrupedException e){
-          // for spurious wakeup or Thread.interrupt();
-       }
-    } 
-}
-\end{lstlisting}
-
-\subtopic{Semaphore}
-\begin{lstlisting}
-class BoundedBuffer<T> {
-    private Queue<T> queue = new LinkedList<>();
-    private Semaphore upperLimit = new Semaphore(Capacity, true);
-    private Semaphore lowerLimit = new Semaphore(0, true);
-    private Semaphore mutex = new Semaphore(1, true);
-    public void put(T item) throws InterruptedException {
-        upperLimit.acquire(); // Warten, falls Zaehler <= 0
-        mutex.acquire(); queue.add(item); mutex.release();
-        lowerLimit.release();
-    }
-    public T get() throws InterruptedException {
-        lowerLimit.acquire();
-        mutex.acquire(); T item = queue.remove(); mutex.release();
-        upperLimit.release();
-        return item;
-    }
-    
-    public void otherMethods(){
-    /* 
-    lowerLimit.acquire(10) wartet, solange Zaehler < permits ist
-    lowerLimit.release(10) Zaehler += permits
-    */
-    }
-}
-\end{lstlisting}
+\lstinputlisting[language=JavaScript]{./sourcecode/controllers/example_controller.js}
+\maintopic{Bundling SPAs}
+\begin{tight-itemize}
+	\item{All JS code must be delivered to the client over potentially metered/slow networks}
+	\item{Bundling and minifying the source leads to smaller SPA footprint}
+	\item{Larger SPAs with many modules need a reliable dependency management}
+	\item{Initial footprint can be reduced by loading dependent modules on-demand}
+\end{tight-itemize}
+\subtopic{WebPack as bundler}
+\begin{tight-itemize}
+	\item{\textbf{Entry}} - The entry point (modules to be bundled) tells webpack where to start and follows the graph of dependencies to know what to bundle.
+	\item{\textbf{Output}} - Tell webpack where to bundle your application
+	\item{\textbf{Loaders}} - Loaders in webpack transform these files into modules as they are added to your dependency graph.
+	\item{\textbf{Plugins}} - Loaders only execute transformations on a per-file basis, plugins are most commonly used performing actions and custom functionality.
+\end{tight-itemize}
+\lstinputlisting[language=JavaScript]{./sourcecode/bundling/example_webpack.js}
 \subtopic{Lock \& Conditions}
 \begin{lstlisting}
 class BoundedBuffer<T> {
