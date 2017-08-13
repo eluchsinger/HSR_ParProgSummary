@@ -279,59 +279,60 @@
 	\item{\textbf{Plugins}} - Loaders only execute transformations on a per-file basis, plugins are most commonly used performing actions and custom functionality.
 \end{tight-itemize}
 \lstinputlisting[language=JavaScript]{./sourcecode/bundling/example_webpack.js}
-\subtopic{Lock \& Conditions}
+\maintopic{Angular 2}
+\subtopic{Angular CLI}
 \begin{lstlisting}
-class BoundedBuffer<T> {
-    private Queue<T> queue = new LinkedList<>();
-    private Lock monitor = new ReentrantLock(true);
-    private Condition nonFull = monitor.newCondition();
-    private Condition nonEmpty = monitor.newCondition();
-    public void put(T item) throws InterruptedException {
-        monitor.lock();
-        try {
-            while (queue.size() == Capacity) { nonFull.await(); }
-            queue.add(item);
-            nonEmpty.signal();
-        } finally { monitor.unlock(); }
-    }
-    public T get() throws InterruptedException {
-        monitor.lock();
-        try {
-            while (queue.size() == 0) { nonEmpty.await(); }
-            T item = queue.remove();
-            nonFull.signal();
-            return item;
-        } finally { monitor.unlock(); }
-    }
-}
+npm install -g @angular/cli // Install the CLI globally
+ng new my-app // Create a new angular app
+ng serve --open // Serve the Angular app and open the browser
+ng build // Just build the angular app
+ng test // Build the angular app and execute the test runner
+ng generate module core
 \end{lstlisting}
-\subtopic{Read \& Write Lock}
-\begin{lstlisting}
-ReadWriteLock rwLock = new ReentrantReadWriteLock(true);
-rwLock.readLock().lock();
-// read-only accesses
-rwLock.readLock().unlock();
-rwLock.writeLock().lock();
-// write (and read) accesses
-rwLock.writeLock().unlock();
-\end{lstlisting}
-\subtopic{CountDown Latch}
-\begin{lstlisting}
-CountDownLatch startWhenFiveAreThere = new CountDownLatch(5);
-startWhenFiveAreThere.countDown(); // Counter-1
-startWhenFiveAreThere.await(); // Wait till counter == 0
-// Latch sind nur einmal verwendbar.
-\end{lstlisting}
-\subtopic{Cyclic Barrier}
-\begin{lstlisting}
-// Treffpunkt fuer fixe Anzahl Threads
-CyclicBarrier gameRound = new CyclicBarrier(3);
-//3 Players:
-while(true){
-	gameRound.await();
-	//play as soon as all 3 are ready
-} // gameRound.reset() - setzt CyclicBarrier zurueck
-\end{lstlisting}
+\subtopic{Architectural Overview}
+\begin{tight-itemize}
+	\item{\textbf{Modules}} - A cohesive block of code dedicated to closely related set of capabilities.
+	\item{\textbf{Directives}} - Provides instructions to transform the DOM.
+	\item{\textbf{Components}} - A component is a directive-with-a-template; it controls a section of the view.
+	\item{\textbf{Templates}} - A template is a form of HTML that tells Angular how to render the component.
+	\item{\textbf{Metadata}} - Describes a class and tells Angular how to process it.
+	\item{\textbf{Services}} - Provides logic of any value, function or feature that your application needs.
+\end{tight-itemize}
+\subtopic{Modules}
+\begin{tight-itemize}
+	\item{Every app has at least one Angular module (the \textbf{root} Module)}
+	\item{Modules export features (directives, services, ...) required by other modules}
+	\item{NICHT zu verwechseln mit ES6 Modules (ES6=pro file; Angular=logischer Block von mehreren ES6 Modulen)}
+	\item{Library Modules:}
+	\begin{tight-itemize}
+		\item{May accomodate multiple Angular modules}
+		\item{Contain and export also other facilities (classes, functions, ...)}
+		\item{Angular ships as multiple library modules (all with the @angular - prefix}
+		\item{As an ES6 module, the module library provides single export with all containing features (also known as \textbf{barrel} export)}
+	\end{tight-itemize}
+\end{tight-itemize}
+\lstinputlisting[language=JavaScript]{./sourcecode/angular/example_module.js}
+\subtopic{@NgModule() Metadata}
+\begin{tight-itemize}
+	\item{\texttt{declarations[Type1, Type2, ...]}} - The \textit{view classes} that belong to this module. Angular has 3 view classes: components, directives and pipes.
+	\item{\texttt{exports[Type1, Type2, Module1, Module2, ...]}} - The subset of declarations that should be visible and usable in the component templates of other modules. Can re-export other modules, which are automatically included when importing this module.
+	\item{\texttt{imports[Module1, Module2, ...]}} - Specifies the modules which exports/providers should be imported into \textit{this} module.
+	\item{\texttt{providers[Provider1, Provider2, ...]}} - Creators of services that this module contributes to the global collection of services (Dependency injection container); they become accessible in all parts of the app.
+	\item{\texttt{bootstrap[Component]}} - The main application view, called the \textit{root component}. Only the \textit{root module} should set this property.
+\end{tight-itemize}
+\subtopic{Module metadata and provider accumulation mechanisms}
+\begin{tight-itemize}
+	\item{Default import} - Imports all components, Pipes, Directives from the given ForeignModule. \textit{Declarations will be re-instantiated on the current module level.} Providers are registered into the current DI container, if registration not yet made.
+	\item{\texttt{forChild(config?)} import} - Represents a static method on a module class (by convention). It is nearly the same as a default import, but allows you to configure services for the current Module level. It returns an object with a \texttt{providers} property and an \texttt{ngModule} property.
+	\item{\texttt{forRoot() import}} - Represents a static method on a module (by convention, see \texttt{\textbf{forChild()}} import). This type of import is useful when you want to enforce that the same provider \textbf{won't} be loaded twice by lazy modules.
+	\begin{tight-itemize}
+		\item{\textbf{Only root modules} should import foreign Modules by calling \texttt{forRoot()}}
+		\item{Declare your providers in \texttt{@NgModule} declaration OR in \texttt{forRoot()}, but \textbf{never} in both.}
+		\item{The \texttt{providers} are added to the DI container on \textbf{root} level}
+		\item{Also, the other ForeignModule are imported by the \texttt{NgModule} property.}
+		\item{Providers from \texttt{ForeignModule.forRoot()} take precedence over the \texttt{providers} from the module definition.}
+	\end{tight-itemize}
+\end{tight-itemize}
 \subtopic{Phaser}
 Verallgemeinerte Cyclic Barrier
 \begin{lstlisting}
