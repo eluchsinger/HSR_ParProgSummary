@@ -306,18 +306,18 @@ ng generate module core
 	\item{Library Modules:}
 	\begin{tight-itemize}
 		\item{May accomodate multiple Angular modules}
-		\item{Contain and export also other facilities (classes, functions, ...)}
-		\item{Angular ships as multiple library modules (all with the @angular - prefix}
+		\item{Contain and export also other facilities (classes, functions, \ldots)}
+		\item{Angular ships as multiple library modules (all with the @angular-prefix)}
 		\item{As an ES6 module, the module library provides single export with all containing features (also known as \textbf{barrel} export)}
 	\end{tight-itemize}
 \end{tight-itemize}
 \lstinputlisting[language=JavaScript]{./sourcecode/angular/example_module.js}
 \subtopic{@NgModule() Metadata}
 \begin{tight-itemize}
-	\item{\texttt{declarations[Type1, Type2, ...]}} - The \textit{view classes} that belong to this module. Angular has 3 view classes: components, directives and pipes.
-	\item{\texttt{exports[Type1, Type2, Module1, Module2, ...]}} - The subset of declarations that should be visible and usable in the component templates of other modules. Can re-export other modules, which are automatically included when importing this module.
-	\item{\texttt{imports[Module1, Module2, ...]}} - Specifies the modules which exports/providers should be imported into \textit{this} module.
-	\item{\texttt{providers[Provider1, Provider2, ...]}} - Creators of services that this module contributes to the global collection of services (Dependency injection container); they become accessible in all parts of the app.
+	\item{\texttt{declarations[Type1, Type2, \ldots]}} - The \textit{view classes} that belong to this module. Angular has 3 view classes: components, directives and pipes.
+	\item{\texttt{exports[Type1, Type2, Module1, Module2, \ldots]}} - The subset of declarations that should be visible and usable in the component templates of other modules. Can re-export other modules, which are automatically included when importing this module.
+	\item{\texttt{imports[Module1, Module2, \ldots]}} - Specifies the modules which exports/providers should be imported into \textit{this} module.
+	\item{\texttt{providers[Provider1, Provider2, \ldots]}} - Creators of services that this module contributes to the global collection of services (Dependency injection container); they become accessible in all parts of the app.
 	\item{\texttt{bootstrap[Component]}} - The main application view, called the \textit{root component}. Only the \textit{root module} should set this property.
 \end{tight-itemize}
 \subtopic{Module metadata and provider accumulation mechanisms}
@@ -333,7 +333,7 @@ ng generate module core
 		\item{Providers from \texttt{ForeignModule.forRoot()} take precedence over the \texttt{providers} from the module definition.}
 	\end{tight-itemize}
 \end{tight-itemize}
-\subtopic{Phaser}
+\subtopic{Test}
 Verallgemeinerte Cyclic Barrier
 \begin{lstlisting}
 Phaser phaser = new Phaser(0);
