@@ -1,0 +1,16 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "comment-format": [
+            false
+        ],
+        "quotemark": [
+            true, "single"
+        ],
+        "ordered-imports": [
+            false
+        ],
+        "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
+        "object-literal-sort-keys": [ false ]
+    }
+  }

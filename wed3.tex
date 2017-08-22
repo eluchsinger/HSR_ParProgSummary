@@ -244,26 +244,26 @@
 	\item{\textbf{The old way}} - Earlier, we used anchors (\#). Don't use these anymore!
 	\item{\textbf{The HTML5 way}}
 	\begin{tight-itemize}
-		\item{JavaScript API {\tt window.history } is used}
-		\item{{\tt window.history.pushState} causes the address bar to show the URL, but won't cause the browser to load it (or even check, if it's valid)}
-		\item{{\tt window.onpopstate} can be used to listen for route changes}
+		\item{JavaScript API {\texttt window.history } is used}
+		\item{{\texttt window.history.pushState} causes the address bar to show the URL, but won't cause the browser to load it (or even check, if it's valid)}
+		\item{{\texttt window.onpopstate} can be used to listen for route changes}
 		\item{\textbf{warning:} configuration adjustments needed on server-side (all sub-routes must return root-files)}
 	\end{tight-itemize}
 \end{tight-itemize}
 \subtopic{Example routeConfig}
-\lstinputlisting[language=JavaScript]{./sourcecode/routing/routeConfig.js}
+\lstinputlisting[label={routeConfig.js}, caption={routeConfig.js}, language={JavaScript}]{./sourcecode/routing/routeConfig.js}
 \maintopic{Data Bindings}
-\lstinputlisting[language=HTML]{./sourcecode/bindings/example_binding.html}
-\lstinputlisting[language=JavaScript]{./sourcecode/bindings/example_binding.js}
+\lstinputlisting[language={HTML}]{./sourcecode/bindings/example_binding.html}
+\lstinputlisting[language={JavaScript}]{./sourcecode/bindings/example_binding.js}
 \maintopic{Services}
 \begin{tight-itemize}
-	\item{...contain the major application logic}
-	\item{...are generally the source of all application data \textbf{Data Services}}
+	\item{\ldots contain the major application logic}
+	\item{\ldots are generally the source of all application data \textbf{Data Services}}
 	\item{Provide microtesting of smalles possible logic units}
 	\item{Completely decoupled from UI}
 	\item{\textbf{UI Services}} are usually seen in the communication between UI controllers.
 \end{tight-itemize}
-\lstinputlisting[language=JavaScript]{./sourcecode/controllers/example_controller.js}
+\lstinputlisting[language={JavaScript}]{./sourcecode/controllers/example_controller.js}
 \maintopic{Bundling SPAs}
 \begin{tight-itemize}
 	\item{All JS code must be delivered to the client over potentially metered/slow networks}
@@ -278,7 +278,7 @@
 	\item{\textbf{Loaders}} - Loaders in webpack transform these files into modules as they are added to your dependency graph.
 	\item{\textbf{Plugins}} - Loaders only execute transformations on a per-file basis, plugins are most commonly used performing actions and custom functionality.
 \end{tight-itemize}
-\lstinputlisting[language=JavaScript]{./sourcecode/bundling/example_webpack.js}
+\lstinputlisting[label={webpack.js}, caption={webpack.js}, language={JavaScript}]{./sourcecode/bundling/example_webpack.js}
 \maintopic{Angular 2}
 \subtopic{Angular CLI}
 \begin{lstlisting}
@@ -298,7 +298,7 @@ ng generate module core
 	\item{\textbf{Metadata}} - Describes a class and tells Angular how to process it.
 	\item{\textbf{Services}} - Provides logic of any value, function or feature that your application needs.
 \end{tight-itemize}
-\subtopic{Modules}
+\subtopic{About Modules}
 \begin{tight-itemize}
 	\item{Every app has at least one Angular module (the \textbf{root} Module)}
 	\item{Modules export features (directives, services, ...) required by other modules}
@@ -311,14 +311,23 @@ ng generate module core
 		\item{As an ES6 module, the module library provides single export with all containing features (also known as \textbf{barrel} export)}
 	\end{tight-itemize}
 \end{tight-itemize}
-\lstinputlisting[language=JavaScript]{./sourcecode/angular/example_module.js}
+\subtopic{Modules}
+\begin{tight-itemize}
+  \item{\textbf{Root Module}} - By convention named AppModule (app.module.ts). Provides the main view, called the root component, that hosts all other app views. Is bootstrapped by the main.ts
+  \item{\textbf{Core Module}} - Provides globally required services and components directly needed by the root module. The core module should help keep the Root Module clean. Only the root Module should import the Core Module.
+  \item{\textbf{Shared Module}} - Provides globally used components/directives/pipes. It's a global UI component module. Do not specify app-wide singleton providers (services) in a shared module (use Root Module instead).
+  \item{\textbf{Feature Module}} - Splits the application into cohesive feature sets. Allows to assign development responsibilities to different teams. Feature modules are designed to extend the app. A feature module can expose or hide it's implementation from other modules.
+  \item{\textbf{Lazy Module}} - Provides similar features such as Feature Modules. Reduces initial footprint of your SPA. Lazy loaded when invoked by a lazy route. Has it's own DI Container (a child of the root injector).
+\end{tight-itemize}
+\lstinputlisting[label={App Module Code}, caption={app.module.ts}, language={JavaScript}]{./sourcecode/testat/angular/app.module.ts}
+\lstinputlisting[label={Dashboard Module Code}, caption={dashboard.module.ts}, language={JavaScript}]{./sourcecode/testat/angular/dashboard.module.ts}
 \subtopic{@NgModule() Metadata}
 \begin{tight-itemize}
 	\item{\texttt{declarations[Type1, Type2, \ldots]}} - The \textit{view classes} that belong to this module. Angular has 3 view classes: components, directives and pipes.
 	\item{\texttt{exports[Type1, Type2, Module1, Module2, \ldots]}} - The subset of declarations that should be visible and usable in the component templates of other modules. Can re-export other modules, which are automatically included when importing this module.
 	\item{\texttt{imports[Module1, Module2, \ldots]}} - Specifies the modules which exports/providers should be imported into \textit{this} module.
 	\item{\texttt{providers[Provider1, Provider2, \ldots]}} - Creators of services that this module contributes to the global collection of services (Dependency injection container); they become accessible in all parts of the app.
-	\item{\texttt{bootstrap[Component]}} - The main application view, called the \textit{root component}. Only the \textit{root module} should set this property.
+	\item{\texttt{bootstrap[Component]}} - The main application view, called the \textit{root component}. Only the \textit{root module} should set this property (enables usage of the root HTML tag: \texttt{<app-root>}).
 \end{tight-itemize}
 \subtopic{Module metadata and provider accumulation mechanisms}
 \begin{tight-itemize}
@@ -333,42 +342,16 @@ ng generate module core
 		\item{Providers from \texttt{ForeignModule.forRoot()} take precedence over the \texttt{providers} from the module definition.}
 	\end{tight-itemize}
 \end{tight-itemize}
-\subtopic{Test}
-Verallgemeinerte Cyclic Barrier
-\begin{lstlisting}
-Phaser phaser = new Phaser(0);
-phaser.register();
-while(...) {
-  phaser.arriveAndAwaitAdvance();
-  playRound();
-}
-phaser.arriveAndDeregister();
-\end{lstlisting}
-\subtopic{Rendez-Vous}
-\begin{lstlisting}
-//Spezialfall: Nur 2 Parteien
-CyclicBarrier cb = new CyclicBarrier(2);
-// CyclicBarrier mit Semaphore
-class CyclicBarrier {
-  private int p, counter = 0;
-  private Semaphore b = newSemaphore(0);
-  private Semaphore c = newSemaphore(0);
-  public CyclicBarrier(int p) { this.p = p; }
-  public void await() {
-    synchronized(this){
-      counter++;
-      if (counter == p) { b.release(p); }
-    }
-    b.acquire();
-    synchronized(this){
-      counter--;
-      if (counter == 0) { c.release(p); }
-    }
-    c.acquire();
-  }
-}
-//Mit Informationsaustausch: Exchanger.exchange(something);
-\end{lstlisting}
+\newpage
+\subtopic{Components}
+Components control and support the view (Controller in MVC / ViewModel in MVVM). Declared as a TS class with an \texttt{@Component} function decorator.
+The lifecycle is managed by Angular (Hydration, Update, Dehydration)
+\lstinputlisting[label={New Payment Components}, caption={payment.component.ts}, language={JavaScript}]{./sourcecode/testat/angular/new-payment.component.ts}
+\subtopic{Templates}
+\begin{tight-itemize}
+  \item{Almost all HTML syntax is valid template syntax (except \texttt{<script>} for security reasons). Some legal HTML doesn't make much sense in a template (\texttt{<head>, <body>})}
+  \item{Angular extends the HTML vocabulary of your templates with:}
+\end{tight-itemize}
 \maintopic{Thread Pool Konzept}
 \begin{tight-itemize}
 	\item{\textbf{Task Queue:} Tasks in Warteschlange}
@@ -428,50 +411,6 @@ ComplteableFuture.any(future1, future2).thenAccept(continuation);
 	\item{\textbf{Lokale Variabeln:} Lokale Variabeln müssen nicht Read-only (final) sein.}
 	\item{\textbf{Delegate:} Referenz auf Methode}
 \end{tight-itemize}	
-\begin{lstlisting}
-delegate void ThreadStart();
-ThreadStart myDelegate = () => { finished = true; };
-/* --- */
-class BankAccount {
-  private decimal balance;
-  private object syncObject = new object();
-  public void Withdraw(decimal amount) {
-    lock(syncObject) {
-      while (amount > balance) {
-        Monitor.Wait(syncObject);
-      }
-      balance -= amount;
-    }
-  }
-  public void Deposit(decimal amount) {
-    lock(syncObject) {
-     balance += amount;
-         Monitor.PulseAll(syncObject);
-    }
-  }
-}
-/* --- */
-Task task = Task.Factory.StartNew(() => {
-   // task implementation
-});
-task.Wait();
-// alternative: Console.Write(task.Result); // blockiert
-long sum = 0;
-Parallel.ForEach(list, file => {
-  int subTotal = ..
-  lock(someLockObject){
-    sum += subTotal;
-  }
-});
-Parallel.For(0, 100, (index) => { /* use index */ });
-// start two tasks and wait
-Task a = Task.Factory.StartNew( () => _myMethod());
-Task b = Task.Factory.StartNew( () => _myMethod());
-Task.WaitAll(a, b);
-// TPL
-ThreadPool.SetMaxThreads(100); // max thread auf 100 fixieren
-// ohne maxThread werden Threads dynamisch erzeugt ( auch Thread Injection genannt)
-\end{lstlisting}
 \subtopic{Async \& Await Fehler}
 \begin{tight-itemize}
     \item{Versehentlicher blockierender asynch: await vergessen, methode ist synchron}
@@ -480,37 +419,7 @@ ThreadPool.SetMaxThreads(100); // max thread auf 100 fixieren
     \item{Race-condition möglich}
     \item{UI-Deadlock: return await Task.Run(..)}
 \end{tight-itemize}
-\newpage
 \maintopic{GUI}
-\begin{lstlisting}
-// Java
-SwingUtitilties.invokeLater(runnable);
-SwingUtitilties.invokeAndWait(runnable);
-// .Net: call is sync
-async Task<string> ConcatWebSitesAsync(string url1, string url2) {
-    HttpClient client = new HttpClient();
-    Task<string> download1 = client.GetStringAsync(url1);
-    Task<string> download2 = client.GetStringAsync(url2);
-    // now the following part is async
-    string site1 = await download1; // download1 runs in separate thread
-    string site2 = await download2;
-    // oder 'site1 = await new Task(() -> myMethod());
-    return site1 + site2;
-}
-// special case UI
-async void startDownload_Click(...) {
-    HttpClient client = new HttpClient();
-    foreach (var url in collection) {
-        var data = await client.GetStringAsync(url);
-        // this runs in UI thread
-        textArea.Content += data;
-    }
-    // problems: collection might change 
-}
-// ohne await keine Asychronitaet
-// async methode muss await enthalten
-// await anweisung nur in async methode
-\end{lstlisting}
 \maintopic{Memory Model}
 \begin{tight-itemize}
     \item{\textbf{Weak Memory Consistency} Sepeicherzugriff kann in verschieden Reihenfolge geschehen}
@@ -602,89 +511,6 @@ system.shutdown();
     \item{Memory Coalescing: Zugrifssmuster der Threads, falls aufeinanderfolgende Daten -> in ein Memory Burst}
 \end{tight-itemize}
 
-\begin{lstlisting}
-void CudaVectorAdd(float* A, float* B, float* C, int N) {
-  size_t size = N * sizeof(float);
-  float *d_A, *d_B, *d_C;
-  // in Device Memory allozieren
-  handle(cudaMalloc(&d_A, size)); 
-  handle(cudaMalloc(&d_B, size));
-  handle(cudaMalloc(&d_C, size));
-  
-  handle(cudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice));
-  handle(cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice));
-  
-  int blockDim = 512, gridDim = (N + blockDim - 1) / blockDim;
-  // gridDim = Anzahl Bloecke, blockDim Anzahl Threads per Block
-  VectorAddKernel<<<gridDim, blockDim>>>(d_A, d_B, d_C, N);
-  handle(cudaGetLastError());
-  
-  handle(cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost));
-  handle(cudaFree(d_A)); handle(cudaFree(d_B));
-  handle(cudaFree(d_C));
-}
-void handle(cudaError error) {
-  if (error != cudaSuccess) {
-    fprintf(stderr, "CUDA: %s!\n",
-    cudaGetErrorString(error));
-    exit(EXIT_FAILURE);
-  }
-}
-__global__
-void VectorAddKernel(float *A, float *B, float *C, int N) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  if (i < N) {    C[i] = A[i] + B[i];   }
-}
-// 3D Blocks / Grid
-dim3 gridDim(3, 2, 1); dim3 blockDim(4,3,1);
-Function<<gridDim, blockDim>>();
-// Jagged array
-float *matrix =
-(float *)malloc(NofRows * NofCols * sizeof(float));
-matrix[row * NofCols + col] = //..
-
-// Matrix Multiplikation
-__global__
-void multiply(float *A, float *B, float *C) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int j = blockIdx.y * blockDim.y + threadIdx.y;
-  if (i < N && j < M) {
-  float sum = 0;
-  for (int k = 0; k < K; k++) {
-    // sum = A[i,k ] * B[k,j]
-    sum += A[i * K + k] * B[k * M + j];
-  }
-  // C[i,j] = sum
-  C[i * M + j] = sum;
-  }
-}
-// __syncthreads wartet auf alle Threds innerhabl Block
-// in if-else -> zwei Barriere
-// __shared__ float x;
-// statische array-groesse notwendig
-__shared__ float Asub[TILE_SIZE][TILE_SIZE];
-__shared__ float Bsub[TILE_SIZE][TILE_SIZE];
-
-int tx = threadIdx.x, ty = threadIdx.y;
-int col = blockIdx.x * TILE_SIZE + tx;
-int row = blockIdx.y * TILE_SIZE + ty;
-
-for (int tile = 0; tile < nofTiles; tile++) {
-  Asub[ty][tx] = A[row * K + tile * TILE_SIZE + tx];
-  Bsub[ty][tx] = B[(tile * TILE_SIZE + ty) * M + col];
-  __syncthreads();
-  for (int ksub = 0; ksub < TILE_SIZE; ksub++) {
-    sum += Asub[ty][ksub] * Bsub[ksub][tx];
-  }
-  __syncthreads();
-}
-C[row * M + col] = sum;
-// Divergenz:
-// gut -> da alle 32-er War selbe machen
-if (threadIdx.x / 32 > 1) { } else { }
-// Coalescing ist gut falls + threadIdx.x
-data[(Ausdruck ohne threadIdx.x) + threadIdx.x]
-\end{lstlisting}
 \maintopic{Cluster}
 \begin{tight-itemize}
 	\item{Head Node: Zugriffspunkt, rest Compute Nodes }
@@ -695,28 +521,6 @@ data[(Ausdruck ohne threadIdx.x) + threadIdx.x]
 	\item{Communicator: Gruppen von MPI Prozessen}
 	\item{Communicator-World: Alle Prozesse einer Ausführun}
 \end{tight-itemize}
-
-\begin{lstlisting}
-// starten: mpiexec (minus)n 16 FirstMpiProgram.exe  
-// send message
-world.Send(value, to, tag);
-// receive message
-world.Receive(0, tag, out value);
-world.Broadcast(ref value, senderRank); // an alle schicken
-Communicator.world.Barrier() // alle Prozesse Warrten
-// Teilresutate aggregieren, jeder enthaelt Teilresultat
-world.Allreduce(value, (a,b) => a + b);
-// nur rank sieht sum
-world.Allreduce(value, (a,b) => a + b, rank);
-// jeder sendet verschieden Werte an alle 
-// nacher haben alle die Werten von jedem
-outputArray = Alltoall(inputArray); 
-// sende Array an alle, nur ein Wert
-value = Scatter(array, senderRank);
-// einzelne Werte als array sammeln
-outputArray = Gather(value, receiverRank);
-\end{lstlisting}
-
 \maintopic{Reactive Programming}
 \begin{tight-itemize}
 	\item{PLINQ Resultate ungeordnet, Java 8 Stream sind geordnet}
@@ -724,32 +528,6 @@ outputArray = Gather(value, receiverRank);
 	\item{Reactive = Push-Mechanismus: Input-Quelle/Arbeitsschritt is aktiv }
 	\item{Rx: Observer und Observerbable, beides = Subject}
 \end{tight-itemize}
-
-\begin{lstlisting}
-var subject = new Subject<string>();
-subject.Subscribe(Console.WriteLine);
-subject.OnNext("A");
-subject.OnCompleted(); // ende der seq. 
-subject.OnError() // ende bei Error
-subject.Subscribe(delegateNext, delegateError, delegateComplete);
-
-// Subject: Kein buffer, keine alten Werte
-// ReplaySubject: alle alte Werte, unlimited Buffer
-// BehaviourSubject: observer hat letzten Wert, 1 Element Buffer
-// AsyncSubject: letzter Wert bei OnComplete
-var replay = new ReplaySubject<string>();
-
-var merged = oneCollecte.ToObserverable().Merge(subject);
-// default synchron, mit diesem asynch.
-subject.ObserverOn(TaskPoolScheduler.Default); 
-// in UI-Thread
-subject.ObserverOnDispatcher().Subscribe();
-// Moegliche Fehler: Race Condition ( Seiten effekt )
-// Deadlock ( Dependency bei Observer )
-// Observerable.Rangle(start,end)
-// hot = aktiv Observable: notifizieren spontan, ohne registrierte Observer
-// cold = passiv Observable: on request, erst bei anmeldung
-\end{lstlisting}
 
 \maintopic{Software Transactional Memory}
 \begin{tight-itemize}
