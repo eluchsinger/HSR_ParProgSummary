@@ -5,7 +5,7 @@
 	landscape,%						Seite - Landscape
 	ngerman,
 	oneside,%             Einseitiger Druck.
-	6pt,%                 Grosse Schrift, besser geeignet f�r A4.
+	5pt,%                 Grosse Schrift, besser geeignet f�r A4.
 	halfparskip,%         Halbe Zeile Abstand zwischen Abs�tzen.
 ]{scrbook}
 
@@ -346,51 +346,82 @@ The lifecycle is managed by Angular (Hydration, Update, Dehydration)
 \begin{tight-itemize}
   \item{Almost all HTML syntax is valid template syntax (except \texttt{<script>} for security reasons). Some legal HTML doesn't make much sense in a template (\texttt{<head>, <body>})}
   \item{Angular extends the HTML vocabulary of your templates with:}
+  \begin{tight-itemize}
+    \item{Interpolation}
+    \item{Template Expression/Statements}
+    \item{Binding Syntax}
+    \item{Directives}
+    \item{Template Reference Variables}
+    \item{Template Expressoin Operators (Advanced)}
+  \end{tight-itemize}
+  \item{Binding Syntax}
+  \begin{tight-itemize}
+    \item{Two Way Binding [()]}: \texttt{<input type="text" [(ngModel)]="counter.team" $>$}
+    \item{One Way (View to Model / Event Binding) (\ldots)}: \texttt{<button (click)="counter.eventHandler" $>$}
+    \item{One Way (Model to View / Property Binding) [\ldots] or \{\{ \ldots \}\}: \texttt{<input type="text" [(ngModel)]="counter.team"$>$}}
+  \end{tight-itemize}
+  \item{Binding to targets must be declared as Inputs or Outputs (like in the example above)} 
 \end{tight-itemize}
-\maintopic{Thread Pool Konzept}
+\subtopic{Directives}
+Similar to a component, but without a template. Declares as a Typescript class with an \texttt{@Directive()} function decorator. Two different kind of directives exist: Strucutral directives (Modifies the structure of your DOM) and Attribute directives (Alter the appearance or behavior of an existing element)
 \begin{tight-itemize}
-	\item{\textbf{Task Queue:} Tasks in Warteschlange}
-	\item{\textbf{Task Pool:} Beschränkte Anzahl Worker-Threads holen Tasks und machen...}
-	\item{\textbf{Pool Vorteile:} Beschränkte Anzahl Threads, Recycling der Threads, Höhere Abstraktion}
-	\item{\textbf{Pool Einschränkungen:} Tasks müssen unabhänig sein, Run to completion}
+  \item{Attribute Directive}
+  \begin{tight-itemize}
+    \item{\textbf{NgStyle Directive}} \texttt{<div [style.font-size]="isSpecial ? 'x-large' : 'smaller')>}
+    \item{\textbf{NgClass Directive}} \texttt{<div [class.special]="isSpecial>} 
+  \end{tight-itemize}
+\item{Structural Directives}
+	\begin{tight-itemize}
+		\item{Asterisk is "syntactic sugar" for something a bit more complicated}
+		\item{Angular desugars in two stages: First it translated the \texttt{*directive="..."} into a template \textit{attribute}, \texttt{template="directive ..."}. Then it translates the attribute into a \texttt{<template>} Element.}
+		\item{Example: \texttt{<div *ngIf="hasTitle"$>$} results in\\ \texttt{<template [ngIf]="hasTitle"$>$<div>}} 
+	\end{tight-itemize}
 \end{tight-itemize}
 
-%\newpage
-%YOLO - Fire and Forget!
+\textbf{Template reference variables}
+\begin{tight-itemize}
+	\item{References a DOM element within a template}
+	\item{Can also be a reference to an Angular component or directive}
+	\item{Reference variables can be used anywhere in the template}
+	\item{A hash symbol (\#) declares a reference variable}
+	\item{Example:} 
+	\begin{lstlisting}
+		<input placeholder="phone number" #phone>
+		<!-- phone refers to the input element -->
+		<button (click)="callPhone(phone.value)">Call</button>
+	\end{lstlisting}
+\end{tight-itemize}
+\subtopic{Services}
+\begin{tight-itemize}
+	\item Provides any value, function, or feature that your application needs.
+	\item Almost anything can be a service - it should do one thing and do it well.
+	\item Typical services are logging service, data service, message bus, tax calculator, application configuration
+	\item Strongly coupled to Dependency Injection (Angular uses DI to provide the services to the components who need them. Therefore services must be registered in teh DI Container)\\
+\end{tight-itemize}
+Use the \texttt{@Injectable} decorator for services.
 \begin{lstlisting}
-ExecutorService tp = Executors.newFixedThreadPool(nofThreads); 
-// Automatische Anzahl Worker Threads
-ExecutorService tp2 = Executors.newCachedThreadPool(); 
-ExecutorService tp3 = Executors.newWorkStealingPool();
-Future<Integer> future1 = threadPool.submit(() -> {return 0;});
-int result1 = future1.get(); // Wartet auf Task Ende und holt 
-///Result im Fehlerfall ExecutionException
-threadPool.shutdown(); //Threadpool muss heruntergefahren werden
-class ComplexCalculation1 implements Callable<Integer> {
-  @Override
-  public Integer call() throws Exception{ return 0; }
-}
+@Injectable()
+export class CounterService { }
 \end{lstlisting}
-\maintopic{RecursiveTask}
+Then you need to register the service within the DI contianer
 \begin{lstlisting}
-class SearchTask extends RecursiveTask<Boolean>{
-   // per constructor
-   private List<String> words; private String pattern;
-   protected Boolean compute(){
-     int n = words.size();
-     if( n == 0) return false;
-     if( n == 1) return words.get(0).matches(pattern);
-     SearchTask left = new SearchTask(words.sublist(0, n/2), pattern);
-     SearchTask right = new SearchTask(words.sublist(n/2, n), pattern);
-     // alternative invokeAll(left, right);
-     left.fork(); right.fork();
-     return right.join() || left.join(); 
-   }
+@NgModule({
+	imports: [...],
+	declarations: [...],
+	providers: [ CounterService ],
+	exports: [...]
+})
+export class CounterModule { }
+\end{lstlisting}
+To use the Service in a component, you can declare it in the constructor and it will be injected by the DI Container.
+\begin{lstlisting}
+@Component(...)
+export class CounterComponent {
+	private counter : CounterModel;
+	constructor(private counterService: CounterService) {
+		this.counter = counterService.load();
+	}
 }
-ForkJoinPool threadPool = new ForkJoinPool() 
-// Alternative: ForkJoinPool.commonPool(); 
-threadPool.invoke(new mySuperTask());
-//Kein Shutdown noetig, da Worker-Threads als Deamon Threads laufen.
 \end{lstlisting}
 \maintopic{Task Parallel Library (TPL)}
 \begin{lstlisting}
