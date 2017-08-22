@@ -9,6 +9,8 @@ import {AccountsService} from '../../services/accounts.service';
   styleUrls: ['./payment.component.css']
 })
 export class PaymentComponent implements OnInit {
+  @Output() click = new EventEmitter<any>();
+  @Input() title: string;
   private sender: AccountViewModel;
   private recipient: AccountViewModel = new AccountViewModel();
   private amount: number = 0;
