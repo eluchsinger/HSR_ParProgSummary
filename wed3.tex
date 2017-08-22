@@ -82,13 +82,14 @@
 	rulecolor=\color{spec_gray}, 
 	aboveskip=\smallskipamount, 
 	belowskip=\smallskipamount,       % 
-	tabsize=2,	                   % sets default tabsize to 2 
+	tabsize=1,	                   % sets default tabsize to 2 
 }
 
 %\usepackage[retainorgcmds]{IEEEtrantools} %IEEEeqnarray
 
 \usepackage{xfrac} %f"ur sch"one 1/2 etc. Br"uche: \sfrac{1}{2}
 \usepackage{cancel} %Durchstreichen in amsmath: \cance{x} oder \cancelto{0}{x}
+\usepackage{enumitem}
 
 \definecolor{spec_gray}{gray}{0.5}
 \definecolor{spec_lgray}{gray}{0.65}
@@ -151,12 +152,10 @@
 
 \renewcommand\arraystretch{1.5}
 
-
-
 \CustomVerbatimEnvironment{myverbatim}{Verbatim}{fontsize=\footnotesize,baselinestretch=0.8,numbers=none,showspaces=false,frame=single,rulecolor=\color{spec_gray}}     
 
 \newenvironment{tight-itemize}
-{ \begin{itemize}
+{ \begin{itemize}[leftmargin=*, nosep]
     \setlength{\itemsep}{0px}
     \setlength{\parskip}{0px}
     \setlength{\parsep}{0px}  }
@@ -173,7 +172,6 @@
 
 \parskip-0.5mm
 
-
 \pagestyle{empty}
 %\pagenumbering{arabic}
 
@@ -182,7 +180,6 @@
 \newcounter{maintopicenum}
 \newcounter{subtopicenum}
 \newcounter{subsubtopicenum}
-
 
 \begin{multicols}{4}[][-5pt]
 
@@ -195,7 +192,6 @@
 %\setlength{\parsep}{-20mm}
 
 \raggedbottom %whitespace am Ende der letzten Seite statt verteilen des Inhalts auf ben"otigte Seiten
-
 
 
 \titletopic{WED3 Zusammenfassung \qquad \today \\ HSR FS17}
@@ -342,7 +338,6 @@ ng generate module core
 		\item{Providers from \texttt{ForeignModule.forRoot()} take precedence over the \texttt{providers} from the module definition.}
 	\end{tight-itemize}
 \end{tight-itemize}
-\newpage
 \subtopic{Components}
 Components control and support the view (Controller in MVC / ViewModel in MVVM). Declared as a TS class with an \texttt{@Component} function decorator.
 The lifecycle is managed by Angular (Hydration, Update, Dehydration)
@@ -359,6 +354,8 @@ The lifecycle is managed by Angular (Hydration, Update, Dehydration)
 	\item{\textbf{Pool Vorteile:} Beschränkte Anzahl Threads, Recycling der Threads, Höhere Abstraktion}
 	\item{\textbf{Pool Einschränkungen:} Tasks müssen unabhänig sein, Run to completion}
 \end{tight-itemize}
+
+\newpage
 %YOLO - Fire and Forget!
 \begin{lstlisting}
 ExecutorService tp = Executors.newFixedThreadPool(nofThreads); 
@@ -411,59 +408,6 @@ ComplteableFuture.any(future1, future2).thenAccept(continuation);
 	\item{\textbf{Lokale Variabeln:} Lokale Variabeln müssen nicht Read-only (final) sein.}
 	\item{\textbf{Delegate:} Referenz auf Methode}
 \end{tight-itemize}	
-\subtopic{Async \& Await Fehler}
-\begin{tight-itemize}
-    \item{Versehentlicher blockierender asynch: await vergessen, methode ist synchron}
-    \item{Threadwechsel innerhalb der Methode: Vorsicht lokale Variablen!}
-    \item{Quasiparallelität: foreach von collection -> collection kann verändert werden}
-    \item{Race-condition möglich}
-    \item{UI-Deadlock: return await Task.Run(..)}
-\end{tight-itemize}
-\maintopic{GUI}
-\maintopic{Memory Model}
-\begin{tight-itemize}
-    \item{\textbf{Weak Memory Consistency} Sepeicherzugriff kann in verschieden Reihenfolge geschehen}
-    \item{\textbf{JVM Minimale Garantien} Atomicity (Unteilbarkeit) \\ Visibility ( Sichtbarkeit) 
-        \\ Ordering (Reihenfolge)}
-    \item{\textbf{Zugriff auf Variable} Primitive Datentypben bis 32bit atomar, Objeckt-Refernz atomar, volatile Variable ist atomar (long und double mit volatile ja )}
-    \item{\textbf{instanzierung mit Zuweisung nicht atomar} }
-    \item{\textbf{Java Visibility Garantien:} garatiert bei: Locks Release \& Aquire, Volatile variable zugriff, initialisierung von final Variable, Thread start und join }
-    \item{\textbf{Java Volatile Keyword} Atomares schreiben für long und double, Aenderungen werden anderen Zugreifenden propagiert, Kein Umordnung durch Compiler / Laufzeitsystem / CPU}
-\end{tight-itemize}
-\begin{lstlisting}
-class SpinLock{
-  private AtomicBoolean locked = new AtomicBoolena(false);
-  public void aquire(){
-    while(locked.getAndSet(true)){
-      Thread.yield();
-    }
-  }
-  public  void release(){ locked.set(false); }
-  // locked.compareAndSet(expected, update)
-  // locked.updatedAndGet(x -> true);
-  // locked.getAndSet(false)
-}
-// Optimistische Synchronisation
-do{
-    oldValue = var.get();
-    newValue = calculate();
-} while(!var.compareAndSet(oldValue, newValue))
-// Java 8: var.updatedAndget(old -> calculate(old));
-// ABA Problem:
-// Thread 1 -> set to A
-// Thread 2 -> set to B -> set to A
-// Thread 1 sees A and updates value
-// ----
-AtomicReference<Node<T>> top = new AtomicReference<>();
-void push(T value) {
-  Node<T> newNode = new Node<>(value);
-  Node<T> current;
-  do {
-    current = top.get();
-    newNode.setNext(current);
-  } while (!top.compareAndSet(current, newNode));
-}
-\end{lstlisting}
 %volatile int x; \\
 %\begin{center}
 %    \includegraphics[width=0.2\textwidth]{img/volatile.png}
