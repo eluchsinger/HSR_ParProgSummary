@@ -583,8 +583,21 @@ Wenn als Parameter (sowohl im Konstruktor oder auch im Request Handler eines Con
 	\item \textbf{Scoped} - are created once per request.
 	\item \textbf{Singleton} - are created the first time they are requested (or when ConfigureServices is run if you specify an instance there) and then every subsequent request will use the same instance.\\
 \end{tight-itemize}
-\textbf{Wichtig}: Multi-Threading beachten (z.B. DBContext ist nicht Thread-Safe).\\
+\textbf{Wichtig}: Multi-Threading beachten (z.B. \texttt{DBContext} ist nicht Thread-Safe).\\
 \textbf{Merke}: Komponenten dürfen sich nur Komponenten mit gleicher oder längerer Lebensdauer injecten lassen.
+\subtopic{Controller}
+Der Controller beinhaltet die Actions, welche vom Framework aufgerufen werden. Parameter vom Query String und Body werden automatisch auf die Method-Parameter von der Action gemapped. Der Controller wird in der Default-Konfiguration für jeden Request neu erzeugt.\\
+\textbf{Konvention}: Postfix "Controller", z.B. "Home\textbf{Controller}"\\
+Als Return Value wird ein \texttt{ActionResult} Objekt zurückgegeben. Dieses Resultat wird dann zum Client zurückgeschickt.
+\subparagraph{URL Pattern}
+URL: \texttt{http://localhost:5000/\{controller\}/\{action\}/}
+\begin{tight-itemize}
+	\item \textbf{\{controller\}} Sucht im Folder Controllers nach einer Klasse mit \{Name\}Controller
+	\item \textbf{\{action\}} Sucht innerhalb dieser Klasse nach einer Methode mit \{Name\}
+\end{tight-itemize}
+\lstinputlisting{sourcecode/csharp/example_default_route.cs}
+
+
 % Add white spaces inside the verbatim tag if you need to waste space (to keep the layout tidy).
 \begin{verbatim}
 \end{verbatim}
