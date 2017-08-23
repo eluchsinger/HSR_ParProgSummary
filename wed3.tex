@@ -217,9 +217,6 @@
 \begin{tight-itemize}
 	\item{Links multiple application parts together}
 	\item{Provides the concept of information architecture (IA)}
-\end{tight-itemize}
-\subtopic{Basics}
-\begin{tight-itemize}
 	\item{Routing is accomplished \textbf{completely} client-side}
 	\begin{tight-itemize}
 		\item{No page reload, no roundtrip, server isn't involved}
@@ -243,9 +240,8 @@
 		\item{\textbf{warning:} configuration adjustments needed on server-side (all sub-routes must return root-files)}
 	\end{tight-itemize}
 \end{tight-itemize}
-\subtopic{Example routeConfig}
 \lstinputlisting[label={routeConfig.js}, caption={routeConfig.js}, language={JavaScript}]{./sourcecode/routing/routeConfig.js}
-\maintopic{Data Bindings}
+\subtopic{Data Bindings}
 \lstinputlisting[language={HTML}]{./sourcecode/bindings/example_binding.html}
 \lstinputlisting[language={JavaScript}]{./sourcecode/bindings/example_binding.js}
 \maintopic{Services}
@@ -273,7 +269,6 @@
 \end{tight-itemize}
 \lstinputlisting[label={webpack.js}, caption={webpack.js}, language={JavaScript}]{./sourcecode/bundling/example_webpack.js}
 \maintopic{Angular 2}
-\subtopic{Angular CLI}
 \begin{lstlisting}
 npm install -g @angular/cli // Install the CLI globally
 ng new my-app // Create a new angular app
@@ -342,15 +337,7 @@ The lifecycle is managed by Angular (Hydration, Update, Dehydration)
 \subtopic{Templates}
 \begin{tight-itemize}
   \item{Almost all HTML syntax is valid template syntax (except \texttt{<script>} for security reasons). Some legal HTML doesn't make much sense in a template (\texttt{<head>, <body>})}
-  \item{Angular extends the HTML vocabulary of your templates with:}
-  \begin{tight-itemize}
-    \item{Interpolation}
-    \item{Template Expression/Statements}
-    \item{Binding Syntax}
-    \item{Directives}
-    \item{Template Reference Variables}
-    \item{Template Expressoin Operators (Advanced)}
-  \end{tight-itemize}
+  \item{Angular extends the HTML vocabulary of your templates with:} Interpolation, Template Expression \& Statements, Binding Syntax, Directives, Template Reference Variables, Template Expression Operators (Advanced)
   \item{Binding Syntax}
   \begin{tight-itemize}
     \item{Two Way Binding [()]}: \texttt{<input type="text" [(ngModel)]="counter.team" $>$}
@@ -568,7 +555,7 @@ Attribute werden verwendet, um die Konventionen von ASP zu überschreiben oder z
 \subparagraph{Front Controller}
 In ASP.NET übernimmt der Front Controller das Routing.
 \begin{center}
-	\includegraphics[width=0.23\textwidth]{img/FrontController.png}
+	\includegraphics[width=0.24\textwidth]{img/FrontController.png}
 \end{center}
 \subtopic{Middlewares}
 Ein Request durchläuft ein Stack von Middlewares. \textbf{Jede Middleware kann den Request beenden.} Beispiele für Middlewares: Autorisierung, Logging, Welcome Page, Static Files
@@ -595,8 +582,28 @@ URL: \texttt{http://localhost:5000/\{controller\}/\{action\}/}
 	\item \textbf{\{controller\}} Sucht im Folder Controllers nach einer Klasse mit \{Name\}Controller
 	\item \textbf{\{action\}} Sucht innerhalb dieser Klasse nach einer Methode mit \{Name\}
 \end{tight-itemize}
-\lstinputlisting{sourcecode/csharp/example_default_route.cs}
-
+\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_default_route.cs}
+\subtopic{Razor}
+Razor ist eine Template Engine mit C\# ähnlicher Syntax. Das @ wechselt zwischen HTML und C\# Code.
+\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_razor.cshtml}
+\subtopic{Tag Helpers}
+Tag Helpers ermöglichen C\# Code an HTML Tags zu binden. Beispiel: Ein E-Mail Tag soll durch einen Link-Tag ersetzt werden.
+\begin{lstlisting}
+<email mail-for="support@example.com"></email>
+<a href="mailto:support@example.com">support@example.com</a>
+\end{lstlisting}
+\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_email_tag.cs}
+Helper im File \_ViewImports.cshtml registrieren.
+\begin{lstlisting}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Pizza
+\end{lstlisting}
+\subparagraph{\_ViewStart.cshtml} wird für jedes Layout aufgerufen. Standardmässig erhält jeder das gleiche Layout. Dieser Wert kann überschrieben werden.
+\begin{lstlisting}
+	@{
+		Layout="~/Views/Shared/_Layout.cshtml"
+	}
+\end{lstlisting}
 
 % Add white spaces inside the verbatim tag if you need to waste space (to keep the layout tidy).
 \begin{verbatim}
