@@ -521,11 +521,12 @@ Komponenten erhalten alle Parameter als \texttt{props} Objekt (bei Klasse als \t
 \begin{lstlisting}
 npm install -g create-react-app
 create-react-app hello-hsr
-npm start (Starts the development server)
-npm run build (Bundles the app into static files for production)
-npm test (Starts the test runner)
-npm run eject (Removes this tool and copies build dependencies,
- config files, scripts into the app directory. If you do this, you can't go back!)
+npm start     // (Starts the development server)
+npm run build // (Bundles the app into static files for production)
+npm test      // (Starts the test runner)
+npm run eject //(Removes this tool and copies build dependencies,
+              // config files, scripts into the app directory.
+              // If you do this, you can't go back!)
 \end{lstlisting}
 \subtopic{React Lifecycle}
 \begin{tight-itemize}
@@ -547,7 +548,43 @@ npm run eject (Removes this tool and copies build dependencies,
 		\item \texttt{componentWillUnmount()} - Aufräumen
 	\end{enumerate}
 \end{tight-itemize}
-
+\subtopic{Container vs Presentation Component}
+Trenne die Präsentation von der Logik. Anstatt eine Komponente zu bauen, die sowohl den Lifecycle und die Rechenarbeit macht, wie auch die Daten darstellt, baue zwei Komponenten. Meistens ist die Präsentationskomponente eine reine Funktion und die Container Komponente eine Klasse.
+\maintopic{Redux}
+Bei grösseren Anwendungen kommt oft Redux (Predictable State Container) zum Einsatz. Der State wird als Tree von Objekten dargestellt. Ein Tree für die gesamte Applikation! Alle Veränderungen am Tree führen zu einem neuen Tree (immutable). State wird im sogenannten \textbf{Store} verwaltet.
+\maintopic{ASP.NET (Core)}
+ASP.NET ist eine der am weitesten verbreiteten Technologien für das Erstellen von Websites.
+\subtopic{Grundlagen}
+\subparagraph{Attribute}
+Attribute werden verwendet, um die Konventionen von ASP zu überschreiben oder zu unterstützen.
+\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_test.cs}
+\subparagraph{Multithreading}
+\begin{tight-itemize}
+	\item ASP.NET besitzt einen Threadpool (grösse konfigurierbar)
+	\item ASP.NET wählt für jeden Request einen Thread aus dem Pool. Dieser bearbeitet die Anfrage.
+	\item Der Thread ist so lange blockiert, bis der Request abgeschlossen ist. Es gibt aber Möglichkeiten, den Thread frühzeitig zurückzugeben.
+	\item Warnung: Keine geteilten Daten in Controller und Service halten (z.B. statische Variablen). \textbf{ASP instanziiert für jeden Request einen neuen Controller.}
+\end{tight-itemize}
+\subparagraph{Front Controller}
+In ASP.NET übernimmt der Front Controller das Routing.
+\begin{center}
+	\includegraphics[width=0.23\textwidth]{img/FrontController.png}
+\end{center}
+\subtopic{Middlewares}
+Ein Request durchläuft ein Stack von Middlewares. \textbf{Jede Middleware kann den Request beenden.} Beispiele für Middlewares: Autorisierung, Logging, Welcome Page, Static Files
+ASP.NET kennt 4 verschiedene Varianten, um Middlewares zu registrieren (die 4. ist die Middleware als Klasse).
+\lstinputlisting[language={[Sharp]C}, label={Middleware Registration Example}, caption={Middleware registration example}]{sourcecode/csharp/example_middleware.cs}
+\subtopic{Dependency Injection - Registration}
+Wenn als Parameter (sowohl im Konstruktor oder auch im Request Handler eines Controllers) ein Interface erwartet wird, wird im DI Container nachgeschaut ob es eine Dependency zum Injecten gibt. Eine Captive Dependency ist eine Dependency mit falsch konfigurierter Lifetime (z.B. sie wird gar nie verwendet).
+\lstinputlisting[language={[Sharp]C}, label={DI Registration}, caption={DI Registration example}]{sourcecode/csharp/example_di.cs}
+\subparagraph{Dependency Lifetime}
+\begin{tight-itemize}
+	\item \textbf{Transient} - are created each time they are requested. This lifetime works best for lightweight, stateless services.
+	\item \textbf{Scoped} - are created once per request.
+	\item \textbf{Singleton} - are created the first time they are requested (or when ConfigureServices is run if you specify an instance there) and then every subsequent request will use the same instance.\\
+\end{tight-itemize}
+\textbf{Wichtig}: Multi-Threading beachten (z.B. DBContext ist nicht Thread-Safe).\\
+\textbf{Merke}: Komponenten dürfen sich nur Komponenten mit gleicher oder längerer Lebensdauer injecten lassen.
 % Add white spaces inside the verbatim tag if you need to waste space (to keep the layout tidy).
 \begin{verbatim}
 \end{verbatim}
