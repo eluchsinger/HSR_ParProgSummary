@@ -495,7 +495,7 @@ var subscription = this.http.get('api/samples').subscribe(
 \lstinputlisting[language={JavaScript}]{sourcecode/angular/example_http.ts}
 \subtopic{Angular Routing}
 Use Angular Router to navigate among views. Once the application is bootstrapped, the Router performs the initial navigation based on the current browser URL. Angular Router is an external Module called RouterModule. It's important to add \texttt{<base href>} to the index.html site.
-\subtitle{Defining the Router Outlet}
+\subparagraph{Defining the Router Outlet}
 RouterOutlet is a directive from the router library. It defines where the router should display the views. Can also be specified within a child component.
 \lstinputlisting[language={HTML}]{sourcecode/angular/example_router_outlet.html}
 \lstinputlisting[language={JavaScript}, label={Route Config}, caption={example-routing.module.ts}]{sourcecode/angular/example_routing.ts}
@@ -503,7 +503,50 @@ RouterOutlet is a directive from the router library. It defines where the router
 There are template driven and reactive (model-driven) forms. We focus on template driven forms.
 By using the \texttt{<form>} tag, Angular automatically replaces it with an \texttt{ngForm}. It provides additional validation and error handling features. Use standard HTML5 features to validate your form. Use the \texttt{[(ngModel)]} binding to bind values. This reads out the value of the model for the first time. Updates are automatically written back into the bound model.
 \lstinputlisting[language={HTML}]{sourcecode/angular/example_form.html}
-
+\maintopic{React}
+React ist eine Library (kein Framework!) um UI's zu bauen. Es besitzt ein minimales Featureset und wurde vom Gesichterbuch entwickelt.
+\subparagraph{Prinzipien von React}
+Functionale Programmierung: Komponenten sind Funktionen von \texttt{(Attribute, State?) => View}. Komposition statt Vererbung. Immutability. Minimieren von und expliziter mutable State. Braucht es einen State/Lifecycle? Dann verwende eine Klassenkomponente. Sonst verwende lediglich eine Funktion (\texttt{function Hello(props)}).
+\subtopic{JavaScript XML (JSX)}
+React verwendet JSX, einen Präprozessor, der JavaScript um XML ergänzt -- XML kann an beliebiger Stelle vorkommen.
+\subparagraph{JSX Einschränkungen}
+\begin{tight-itemize}
+	\item{React Elemente müssen mit Grossbuchstaben anfangen. JavaScript-Keywords dürfen nicht verwendet werden.}
+	\item{React muss immer importiert werden, wenn JSX verwendet wird. Weil JSX vom Präprozessor zu \texttt{React.createElement} Aufrufen umgewandelt wird.}
+\end{tight-itemize}
+\subtopic{Props and State}
+Komponenten erhalten alle Parameter als \texttt{props} Objekt (bei Klasse als \texttt{this.props} und bei Funktionen als Parameter). \textbf{Props sind immer read-only}. React \textbf{Klassenkomponenten} können einen veränderbaren Zustand haben. Um den State zu ändern, verwenden wir die Methode \texttt{setState()}. Ist der nächste State vom Vorherigen abhängig, sollte man diese folgende Form verwenden (falls der neue State unabhängig vom alten ist, kann \texttt{state =$>$} weggelassen werden).
+\lstinputlisting{sourcecode/react/example_counter.js}
+\subtopic{React CLI}
+\begin{lstlisting}
+npm install -g create-react-app
+create-react-app hello-hsr
+npm start (Starts the development server)
+npm run build (Bundles the app into static files for production)
+npm test (Starts the test runner)
+npm run eject (Removes this tool and copies build dependencies,
+ config files, scripts into the app directory. If you do this, you can't go back!)
+\end{lstlisting}
+\subtopic{React Lifecycle}
+\begin{tight-itemize}
+	\item Mounting
+	\begin{enumerate}
+		\item \texttt{constructor(props)} - State initialisieren
+		\item \texttt{render()}
+		\item \texttt{componentDidMount()} - DOM aufgebaut, Remote Daten laden, setState führt zu Re-Rendering
+	\end{enumerate}
+	\item Updating
+	\begin{enumerate}
+		\item \texttt{componentWillReceiveProps(nextProps)} - Vorschau auf die nächsten Props.
+		\item \texttt{shouldComponentUpdate(nextProps, nextState)} - wenn \texttt{return false}, wird Rendering übersprungen.
+		\item \texttt{componentWillUpdate(nextProps, nextState)} - selten gebraucht (evtl. Animationen starten)
+		\item \texttt{componentDidUpdate(prevProps, prevState)} - DOM ist aktualisiert.
+	\end{enumerate}
+	\item Unmounting
+	\begin{enumerate}
+		\item \texttt{componentWillUnmount()} - Aufräumen
+	\end{enumerate}
+\end{tight-itemize}
 
 % Add white spaces inside the verbatim tag if you need to waste space (to keep the layout tidy).
 \begin{verbatim}
