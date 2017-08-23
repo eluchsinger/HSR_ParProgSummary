@@ -1,0 +1,12 @@
+<form (ngSubmit)="doLogin(frm)" #frm="ngForm">
+    <input type="text" class="form-control" id="login" required
+     [(ngModel)]="model.login" name="login" #name="ngModel">
+
+    <div [hidden]="name.valid || name.pristine" class="alert">
+        Name is required!
+    </div>
+
+    <button type="submit" [disabled]="!frm.form.valid" class="btn">
+        Submit
+    </button>
+</form>

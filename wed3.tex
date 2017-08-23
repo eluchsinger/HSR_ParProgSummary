@@ -5,7 +5,7 @@
 	landscape,%						Seite - Landscape
 	ngerman,
 	oneside,%             Einseitiger Druck.
-	5pt,%                 Grosse Schrift, besser geeignet f�r A4.
+	4pt,%                 Grosse Schrift, besser geeignet f�r A4.
 	halfparskip,%         Halbe Zeile Abstand zwischen Abs�tzen.
 ]{scrbook}
 
@@ -213,9 +213,6 @@
 	\item{No operation system access} 
 	\item{More expensive deployment strategies} 
 \end{tight-itemize}
-%\begin{center} %
-%	\includegraphics[width=0.15\textwidth]{img/thread_model.png}
-%\end{center}
 \maintopic{What is Routing?}
 \begin{tight-itemize}
 	\item{Links multiple application parts together}
@@ -423,209 +420,90 @@ export class CounterComponent {
 	}
 }
 \end{lstlisting}
-\maintopic{Task Parallel Library (TPL)}
+\subtopic{Component Lifecycle}
+Green events are more important
+\begin{center}
+	\includegraphics[width=0.1\textwidth]{img/ComponentLifecycle.png}
+\end{center}
+\begin{tight-itemize}
+	\item \texttt{ngOnInit} - the creation event (also known as \textbf{hydration}) Setup the component and initially fetch data from an underlying data source (do not put too much logic here, just load data and delegate to other methods)
+	\item \texttt{ngOnDestroy} - the destruction even (also known as \textbf{dehydration}) Use this method to detach event handlers to avoid memory leaks.
+\end{tight-itemize}
+\lstinputlisting[language={JavaScript}]{./sourcecode/angular/example_component.ts}
+\subtopic{Component Transclusion}
+Angular components consist of a view (HTML) and the component logic (Class). Reusable angular components enable parameterization of the view. Transclusion allows the component user to add content to the body section.
 \begin{lstlisting}
-CompletableFuture<Long> future = CompletableFuture.supplyAsync(() -> longOperation());
-//other work
-process(future.get());
-future.thenAccept(result -> System.out.println(result -> System.out.println(result));
-CompletableFuture.allof(future1, future2).thenAccept(continuation);
-ComplteableFuture.any(future1, future2).thenAccept(continuation);
+<section>
+	<wed-navigation>
+		<h1 wed-title>WED3 Lecture</h1>
+		<menu><!-- ... --></menu>
+	</wed-navigation>
+</section>
 \end{lstlisting}
-\maintopic{.net}
+\begin{lstlisting}
+<header>
+	<ng-content select='[wed-title]'></ng-content>
+</header>
+<nav>
+	<ng-content select='menu'><ng-content>
+</nav>
+\end{lstlisting}
+\subtopic{Asynchronous Services}
+In Angular, you can use RxJS or EventEmitters to handle async requests / responses. We'll focus on EventEmitters, where you have to subscribe to an event.
+\begin{lstlisting}
+@Injectables()
+export class SampleService {
+	public samplesChanged:EventEmitter<SampleModel[]> = 
+		new EventEmitter<SampleModel[]>();
+	load(): void {
+		/* In real world, invoke data resource service here */
+		this.sampleChanged.emit(this.samples);
+	}
+}
+\end{lstlisting}
+Receiving the data
+\begin{lstlisting}
+@Component({...})
+export class SampleComponent implements OnInit, OnDestroy {
+	ngOnInit() {
+		this.samplesSubscription = this.samplesService
+			.samplesChanged.subscribe(
+				(data:SamplaModel[]) => { this.samples = data; } 
+			}
+	}
+	ngOnDestroy() {
+		this.sampleSubscription.unsubscribe();
+	}
+}
+\end{lstlisting}
+\subtopic{HTTP Client API with Observables}
+\subparagraph{About Observables}
+Think of an observable as a Stream: To listen to objects in the stream, subscribe to the observable. There are Hot Observables and Cold Observables. Hot Observables are shared among all subscribers (for sequences of events, such as mouse move or stock tickers). Cold Observables start running on subscription (such as async web requests) and are not shared among subscribers. They are automatically closed after the task is finished (as opposed to Hot Observables, which do not close automatically).
+\subparagraph{Angular HTTP API} is implemented as a Cold Observable, therefore each subscription will result in a new HTTP Request. The \texttt{subscribe()} method listens for events of an Observable. This method consumes three function pointers:
 \begin{tight-itemize}
-	\item{\textbf{Exception in Threads:} Exception in Threads fürht zu Abbruch des gesamten Programs.}
-	\item{\textbf{volatile} auch von java kopiert}
-	\item{\textbf{Lokale Variabeln:} Lokale Variabeln müssen nicht Read-only (final) sein.}
-	\item{\textbf{Delegate:} Referenz auf Methode}
-\end{tight-itemize}	
-%volatile int x; \\
-%\begin{center}
-%    \includegraphics[width=0.2\textwidth]{img/volatile.png}
-%\ end{center}
-\maintopic{Actor}
-\begin{tight-itemize}
-	\item{\textbf{Vorteile} Aktive Objekte, kein Shared Memory, Kommunikation zwisschen Objekten, kein Race Condition}
+	\item{onNext} - defines, what's to-do when data becomes available.
+	\item{onError} - an error has been thrown while processing the observable. Depending on the implementation, the stream might be broken.
+	\item{onComplete} - The task has been completed. The stream is about to be closed.
 \end{tight-itemize}
 \begin{lstlisting}
-public class NumberPrinter extends UntypedActor {
- public void onReceive(final Object message) {
-  if (message instanceof Integer) {
-    System.out.print(message);
-  }
- }
-}
-ActorSystem system = ActorSystem.create("System")
-ActorRef printer = system.actorOf(Props.create(NumberPrinter.class));
-for (int i = 0; i < 100; i++) {
-    printer.tell(i, ActorRef.noSender());
-    //tell(message, sender)
-    //getSelf() sefl ref, getSender() sender ref
-}
-Future<Object> result = Patterns.ask(actorRef, msg, timeout);
-system.shutdown();
+var subscription = this.http.get('api/samples').subscribe(
+	function (x) { /* onNext -> data received (in x) */ },
+	function (e) { /* onError -> the error (e) was thrown */ },
+	function () { /* onCompleted-> the stream is closing down */ }
+);
 \end{lstlisting}
+\lstinputlisting[language={JavaScript}]{sourcecode/angular/example_http.ts}
+\subtopic{Angular Routing}
+Use Angular Router to navigate among views. Once the application is bootstrapped, the Router performs the initial navigation based on the current browser URL. Angular Router is an external Module called RouterModule. It's important to add \texttt{<base href>} to the index.html site.
+\subtitle{Defining the Router Outlet}
+RouterOutlet is a directive from the router library. It defines where the router should display the views. Can also be specified within a child component.
+\lstinputlisting[language={HTML}]{sourcecode/angular/example_router_outlet.html}
+\lstinputlisting[language={JavaScript}, label={Route Config}, caption={example-routing.module.ts}]{sourcecode/angular/example_routing.ts}
+\subtopic{Angular Forms}
+There are template driven and reactive (model-driven) forms. We focus on template driven forms.
+By using the \texttt{<form>} tag, Angular automatically replaces it with an \texttt{ngForm}. It provides additional validation and error handling features. Use standard HTML5 features to validate your form. Use the \texttt{[(ngModel)]} binding to bind values. This reads out the value of the model for the first time. Updates are automatically written back into the bound model.
+\lstinputlisting[language={HTML}]{sourcecode/angular/example_form.html}
 
-\maintopic{GPU Parallelisierung}
-\begin{tight-itemize}
-	\item{SM: Streaming Multiprocessor. Hat mehrere SP}
-	\item{SP: Streaming Processor. }
-  	\item{SIMD: Single Instruction Multiple Data, Vektorparalleliserung}
-    \item{NUMA: Non-Uniform Memory Access -> Host-Memory zu Device-Memory}
-    \item{Grid: Hat mehrere Blöcke}
-    \item{CUDA Block: Threads sind in Blöcke gruppiert }
-    \item{Thread = virtueller Skalarprozessor}
-    \item{Block = virtueller Multiprozessor}
-    \item{Block müssen unabhängig sein, run-to-completion}
-    \item{Blockgrösse vielfaches von 32}
-    \item{Shared Memory: Per SM, schnell (4), nur zwischen Threads innerhalb Block sichtbar, paar KB }
-    \item{Global Memory: Main memory, langsam (400-600), allen threads sichtbar, mehrer GB}
-    \item{Warp: Block wird intern in 32-Threds Warp zerlegt}
-    \item{Block läuft auf SM, Warp läuft auf SP eines einzigen SM}
-    \item{Divergenz: Unterschiedliche Verzweigung im selben Warp, SM führt Verzweigung, die anderen warten}
-    \item{Memory Coalescing: Zugrifssmuster der Threads, falls aufeinanderfolgende Daten -> in ein Memory Burst}
-\end{tight-itemize}
-
-\maintopic{Cluster}
-\begin{tight-itemize}
-	\item{Head Node: Zugriffspunkt, rest Compute Nodes }
-	\item{Job Manager für Monitoring}
-	\item{HPC Job = vom Client lanciert, hat mehrer Tasks}
-	\item{HPC Task = Zugriff auf Fle Shares, Ausführung eines Executables, Abhängigkeit zwischen Tasks möglich}
-	\item{MPI: basiert auf Actor/CSP, Standard}
-	\item{Communicator: Gruppen von MPI Prozessen}
-	\item{Communicator-World: Alle Prozesse einer Ausführun}
-\end{tight-itemize}
-\maintopic{Reactive Programming}
-\begin{tight-itemize}
-	\item{PLINQ Resultate ungeordnet, Java 8 Stream sind geordnet}
-	\item{Pull: Pipeline-Schritt rückwärst, Input-Quelle is passiv, iteration}
-	\item{Reactive = Push-Mechanismus: Input-Quelle/Arbeitsschritt is aktiv }
-	\item{Rx: Observer und Observerbable, beides = Subject}
-\end{tight-itemize}
-
-\maintopic{Software Transactional Memory}
-\begin{tight-itemize}
-    \item{Atomarice Sequenzen von Operationen}
-    \item{keine inkonsistente Zwischenzustände}
-    \item{ACI TX: Atomicity ( vollständig oder gar nicht sauber) , Consistency (programm vor und nach TX gültig), Isolation (as-if-seriell) }
-    \item{Deskriptiv: was ist atomar, automatisch isolation, nur Speicherzugriff isoliert}
-    \item{Problem: Starvation gefahr, Seiteneffekt bei SW-TX bleibt sichtbar}
-    \item{Nested TX: Commit bei Top-Level TX}
-    \item{HW Support Intel TSX}
-    \item{Scala: Wrapping von Variable}
-    \item{Scala: Write Skew nicht möglich, Starvation problem}
-\end{tight-itemize}
-
-\begin{lstlisting}
-final Ref.View<Integer> balance = STM.newRef(0);
-void deposit(int amount) {
-  M.atomic(() -> {
-    balance.set(balance.get() + amount);
-  });
-}
-void withdraw(int amount) {
-  STM.atomic(() -> {
-    if (balance.get() < amount) {
-      STM.retry();
-    }
-    balance.set(balance.get() - amount);
-  });
-}
-// bei Exception wird rollback
-// write sekew:
-atomic { if (b.onDuty) { a.onDuty = false; } }
-atomic { if (a.onDuty) { b.onDuty = false; } }
-\end{lstlisting}
-
-\maintopic{Misc}
-\begin{lstlisting}
-Collections.synchronizedList(list); 
-/ ..Collection(...) / ..Map...()
-// Lockfreie Datenstrukturen
-ConcurrentLinkedQueue<V>, ConcurrentLinkedDeque<V>
-ConcurrentSkipListSet<V>, ConcurrentHashMap<K, V>
-ConcurrentSkipListMap<K, V>
-\end{lstlisting}
-
-\begin{tight-itemize}
-    \item{OutOfMemory Gründe: Kosten zwischen 128kB bis 1MB pro Thread}
-    \item{notify() vs notifyAll(): Notify() reicht aus, wenn alle Threads auf eine Bedignug warten.}
-\end{tight-itemize}
-
-\begin{lstlisting}
-public class UpgradeableReadWriteLock {
-  private ReadWriteLock readWriteLock = 
-  new ReentrantReadWriteLock(true);
-  private Lock mutex = new ReentrantLock(true);
-
-  public void readLock() throws InterruptedException {
-    readWriteLock.readLock().lock();
-  }
-  public void readUnlock() {
-    readWriteLock.readLock().unlock();
-  }
-  public void upgradeableReadLock() 
-  throws InterruptedException {
-    mutex.lock();
-  }
-  public void upgradeableReadUnlock() { mutex.unlock(); }
-  public void writeLock() throws InterruptedException {
-    mutex.lock();
-    readWriteLock.writeLock().lock();
-  }
-  public void writeUnlock() {
-    mutex.unlock();
-    readWriteLock.writeLock().unlock();
-  }
-}
-//--
-CompletableFuture<String> as = CompletableFuture.supplyAsync(() -> {
-});
-as.thenAccept(result -> {});
-// ForkJoinPool
-invokeAll(a, b) == a.fork(); b.fork(); b.join(); a.join();
-// --
-// lock free stack - herausnehmen, falls platzmangel
-public class LockFreeStack<T> implements Stack<T> {
-    private AtomicReference<StackNode<T>> topNode;
-    private StackNode<T> bottomElement = new StackNode<T>(null);
-    public LockFreeStack(){
-        topNode = new AtomicReference<>(bottomElement);
-    }
-    public void push(T value) {
-        StackNode<T> currentTop;
-        StackNode<T> nextTop;
-        do{
-            currentTop = topNode.get();
-            nextTop = new StackNode<>(currentTop, value);
-        }while (!topNode.compareAndSet(currentTop, nextTop));
-    }
-
-    public T pop() {
-        StackNode<T> currentTop;
-        do{
-            currentTop = topNode.get();
-        }while(currentTop != bottomElement
-        && !topNode.compareAndSet(currentTop, currentTop.getNextElement()));
-        return currentTop.getValue();
-    }
-}
-// AtomicInteger a = new AtomicInteger(10);
-// a.updateAndGet(i -> i + 2);
-
-\end{lstlisting}
-
-\maintopic{Checklist}
-\begin{tight-itemize}
-    \item{ThreadPool shutdown nicht vergessen}
-    \item{GPU: Boundry Check wegen zusätzlichen Threads}
-    \item{wenn wait() oder Condition.await() -> InterruptedException nicht vergessen}
-    \item{try-finall nicht vergessen, wenn lock}
-    \item{Beim eigenen Code: parameter checks ( null check, negative check)}
-    \item{Bei CyclicBarrier.await() ist BarrierBrokenException möglich}
-    \item{Spurious wakeup auch möglich als Fehler.}
-\end{tight-itemize}
 
 % Add white spaces inside the verbatim tag if you need to waste space (to keep the layout tidy).
 \begin{verbatim}
