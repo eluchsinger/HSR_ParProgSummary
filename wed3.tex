@@ -80,9 +80,9 @@
 	frame=single,
 	framerule=1px,
 	rulecolor=\color{spec_gray}, 
-	aboveskip=\smallskipamount, 
-	belowskip=\smallskipamount,       % 
-	tabsize=1,	                   % sets default tabsize to 2 
+	aboveskip=2pt,				% sets the default margin above (default: \medskipamount)
+	belowskip=2pt,				% sets the default margin below (default: \medskipamount)
+	tabsize=1,	                   % sets default tabsize to 1 
 }
 
 %\usepackage[retainorgcmds]{IEEEtrantools} %IEEEeqnarray
@@ -159,7 +159,7 @@
     \setlength{\itemsep}{0px}
     \setlength{\parskip}{0px}
     \setlength{\parsep}{0px}  }
-{ \end{itemize}                  } 
+{ \end{itemize}                  }
 
 \oddsidemargin-2.2cm
 \evensidemargin-2.2cm
@@ -191,7 +191,7 @@
 \setlength{\topsep}{4px} %Platz sparen bei Titeln
 %\setlength{\parsep}{-20mm}
 
-\raggedbottom %whitespace am Ende der letzten Seite statt verteilen des Inhalts auf ben"otigte Seiten
+\raggedbottom %whitespace am Ende der letzten Seite statt verteilen des Inhalts auf benötigte Seiten
 
 
 \titletopic{WED3 Zusammenfassung \qquad \today \\ HSR FS17}
@@ -541,7 +541,6 @@ Trenne die Präsentation von der Logik. Anstatt eine Komponente zu bauen, die so
 Bei grösseren Anwendungen kommt oft Redux (Predictable State Container) zum Einsatz. Der State wird als Tree von Objekten dargestellt. Ein Tree für die gesamte Applikation! Alle Veränderungen am Tree führen zu einem neuen Tree (immutable). State wird im sogenannten \textbf{Store} verwaltet.
 \maintopic{ASP.NET (Core)}
 ASP.NET ist eine der am weitesten verbreiteten Technologien für das Erstellen von Websites.
-\subtopic{Grundlagen}
 \subparagraph{Multithreading}
 \begin{tight-itemize}
 	\item ASP.NET besitzt einen Threadpool (grösse konfigurierbar)
@@ -582,7 +581,7 @@ URL: \texttt{http://localhost:5000/\{controller\}/\{action\}/}
 \lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_default_route.cs}
 \subparagraph{Attribute}
 Attribute werden verwendet, um die Konventionen von ASP zu überschreiben oder zu unterstützen.
-\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_test.cs}
+\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_controller.cs}
 \subparagraph{Validation}
 Es sollte eine Client- und Serverseitige Validation angestrebt werden. Mögliche Attribute für die Server-Seitige Validation:
 \begin{tight-itemize}
