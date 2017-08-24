@@ -542,9 +542,6 @@ Bei grösseren Anwendungen kommt oft Redux (Predictable State Container) zum Ein
 \maintopic{ASP.NET (Core)}
 ASP.NET ist eine der am weitesten verbreiteten Technologien für das Erstellen von Websites.
 \subtopic{Grundlagen}
-\subparagraph{Attribute}
-Attribute werden verwendet, um die Konventionen von ASP zu überschreiben oder zu unterstützen.
-\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_test.cs}
 \subparagraph{Multithreading}
 \begin{tight-itemize}
 	\item ASP.NET besitzt einen Threadpool (grösse konfigurierbar)
@@ -572,7 +569,7 @@ Wenn als Parameter (sowohl im Konstruktor oder auch im Request Handler eines Con
 \end{tight-itemize}
 \textbf{Wichtig}: Multi-Threading beachten (z.B. \texttt{DBContext} ist nicht Thread-Safe).\\
 \textbf{Merke}: Komponenten dürfen sich nur Komponenten mit gleicher oder längerer Lebensdauer injecten lassen.
-\subtopic{Controller}
+\subtopic{Controller \& Routing}
 Der Controller beinhaltet die Actions, welche vom Framework aufgerufen werden. Parameter vom Query String und Body werden automatisch auf die Method-Parameter von der Action gemapped. Der Controller wird in der Default-Konfiguration für jeden Request neu erzeugt.\\
 \textbf{Konvention}: Postfix "Controller", z.B. "Home\textbf{Controller}"\\
 Als Return Value wird ein \texttt{ActionResult} Objekt zurückgegeben. Dieses Resultat wird dann zum Client zurückgeschickt.
@@ -583,6 +580,17 @@ URL: \texttt{http://localhost:5000/\{controller\}/\{action\}/}
 	\item \textbf{\{action\}} Sucht innerhalb dieser Klasse nach einer Methode mit \{Name\}
 \end{tight-itemize}
 \lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_default_route.cs}
+\subparagraph{Attribute}
+Attribute werden verwendet, um die Konventionen von ASP zu überschreiben oder zu unterstützen.
+\lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_test.cs}
+\subparagraph{Validation}
+Es sollte eine Client- und Serverseitige Validation angestrebt werden. Mögliche Attribute für die Server-Seitige Validation:
+\begin{tight-itemize}
+	\item \texttt{[StringLength(60, MinimumLength=3)]}
+	\item{\texttt{[RegularExpression(@"\^[A-Z]+[a-zA-Z"-"\textbackslash s]*\$")]}}
+	\item \texttt{[Required]}
+	\item \texttt{[DataType(DataType.Date)]}
+\end{tight-itemize}
 \subtopic{Razor}
 Razor ist eine Template Engine mit C\# ähnlicher Syntax. Das @ wechselt zwischen HTML und C\# Code.
 \lstinputlisting[language={[Sharp]C}]{sourcecode/csharp/example_razor.cshtml}
