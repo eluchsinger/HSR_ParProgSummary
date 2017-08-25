@@ -56,7 +56,7 @@
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 
 \lstdefinelanguage{JavaScript}{
-	keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, let, void, while, with},
+	keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, let, void, while, with, private},
 	morecomment=[l]{//},
 	morecomment=[s]{/*}{*/},
 	morestring=[b]',
@@ -65,8 +65,8 @@
 	keywordstyle=\color{blue}\bfseries,
 	ndkeywordstyle=\color{purple}\bfseries,
 	identifierstyle=\color{black},
-	commentstyle=\color{mygreen}\ttfamily,
-	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{mygreen},
+	stringstyle=\color{red},
 	sensitive=true
 }
 
@@ -197,23 +197,25 @@
 \titletopic{WED3 Zusammenfassung \qquad \today \\ HSR FS17}
 %\qquad \LaTeX{} Design Martin Stypinski
 \maintopic{Introduction of Web}
-\subtopic{Benefits}
-\begin{tight-itemize}
-	\item{No need for backup} 
-	\item{Platform independent} 
-	\item{No software update} 
-	\item{Lower investment costs} 
-	\item{Software as a Service} 
-\end{tight-itemize}
-\subtopic{Liabilities}
-\begin{tight-itemize}
-	\item{No data sovereignity}
-	\item{Limited calibration possibilities} 
-	\item{Limited/restricted hardware access} 
-	\item{No operation system access} 
-	\item{More expensive deployment strategies} 
-\end{tight-itemize}
-\maintopic{What is Routing?}
+\begin{multicols}{2}
+	\subtopic{Benefits}
+	\begin{tight-itemize}
+		\item{No need for backup} 
+		\item{Platform independent} 
+		\item{No software update} 
+		\item{Lower investment costs} 
+		\item{Software as a Service} 
+	\end{tight-itemize}
+	\subtopic{Liabilities}
+	\begin{tight-itemize}
+		\item{No data sovereignity}
+		\item{Limited calibration possibilities} 
+		\item{Limited/restricted hardware access} 
+		\item{No operation system access} 
+		\item{More expensive deployment strategies} 
+	\end{tight-itemize}
+\end{multicols}
+\subtopic{What is Routing?}
 \begin{tight-itemize}
 	\item{Links multiple application parts together}
 	\item{Provides the concept of information architecture (IA)}
@@ -229,7 +231,7 @@
 	\end{tight-itemize}
 	\item{Router provides client-side event hooks during navigation} - Lifecycle management
 \end{tight-itemize}
-\subtopic{Client-side routing concepts}
+\subparagraph{Client-side routing concepts}
 \begin{tight-itemize}
 	\item{\textbf{The old way}} - Earlier, we used anchors (\#). Don't use these anymore!
 	\item{\textbf{The HTML5 way}}
@@ -342,7 +344,7 @@ The lifecycle is managed by Angular (Hydration, Update, Dehydration)
   \begin{tight-itemize}
     \item{Two Way Binding [()]}: \texttt{<input type="text" [(ngModel)]="counter.team" $>$}
     \item{One Way (View to Model / Event Binding) (\ldots)}: \texttt{<button (click)="counter.eventHandler" $>$}
-    \item{One Way (Model to View / Property Binding) [\ldots] or \{\{ \ldots \}\}: \texttt{<input type="text" [(ngModel)]="counter.team"$>$}}
+    \item{One Way (Model to View / Property Binding) [\ldots] or \{\{\ldots \}\}: \texttt{<input type="text" [(ngModel)]="counter.team"$>$}}
   \end{tight-itemize}
   \item{Binding to targets must be declared as Inputs or Outputs (like in the example above)} 
 \end{tight-itemize}

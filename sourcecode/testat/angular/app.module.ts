@@ -8,7 +8,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AuthModule} from './auth/auth.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DashboardModule} from './dashboard/dashboard.module';
-import {DashboardRoutingModule} from './dashboard/dashboard-routing.module';
+import {DashboardRoutingModule} from './dboard/dboard-rting.module';
 
 @NgModule({
   declarations: [ AppComponent ],

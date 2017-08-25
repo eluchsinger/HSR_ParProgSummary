@@ -1,8 +1,8 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 
 import {AuthService} from '../auth/services/auth.service';
-import {DashboardComponent} from './components/dashboard/dashboard.component';
-import {DashboardRoutingModule} from './dashboard-routing.module';
+import {DashboardComponent} from './components/dboard.component';
+import {DashboardRoutingModule} from './dboard-routing.module';
 import {RouterModule} from '@angular/router';
 
 @NgModule({
