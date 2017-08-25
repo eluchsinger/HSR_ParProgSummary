@@ -76,8 +76,8 @@
 	frame=single,
 	framerule=1px,
 	rulecolor=\color{spec_gray}, 
-	aboveskip=2pt,				% sets the default margin above (default: \medskipamount)
-	belowskip=2pt,				% sets the default margin below (default: \medskipamount)
+	aboveskip=0pt,				% sets the default margin above (default: \medskipamount)
+	belowskip=0pt,				% sets the default margin below (default: \medskipamount)
 	tabsize=1,	                   % sets default tabsize to 1 
 }
 
@@ -150,6 +150,7 @@
 
 \CustomVerbatimEnvironment{myverbatim}{Verbatim}{fontsize=\footnotesize,baselinestretch=0.8,numbers=none,showspaces=false,frame=single,rulecolor=\color{spec_gray}}     
 
+% Waste less space with itemizations (Auflistungen)
 \newenvironment{tight-itemize}
 { \begin{itemize}[leftmargin=*, nosep]
     \setlength{\itemsep}{0px}
@@ -157,6 +158,7 @@
     \setlength{\parsep}{0px}  }
 { \end{itemize}                  }
 
+% Waste less space with enumerations
 \newenvironment{tight-enumerate}
 { \begin{enumerate}[leftmargin=*, nosep]
 	\setlength{\itemsep}{0px}
@@ -164,6 +166,7 @@
 	\setlength{\parsep}{0px} }
 { \end{enumerate}}
 
+% Waste less space with multicols (specially embedded)
 \newenvironment{tight-multicols}[1]{%
 	\setlength{\columnsep}{1px}%
 	\setlength{\columnseprule}{0px}%
@@ -202,6 +205,7 @@
 \setlength{\topsep}{4px} %Platz sparen bei Titeln
 %\setlength{\parsep}{-20mm}
 
+% Waste less space with subparagraphs (i.e. Less top and bottom margin )
 \titlespacing*{\subparagraph} {0pt}{0.7ex plus 1ex minus .2ex}{0.5ex plus .2ex}
 
 \raggedbottom %whitespace am Ende der letzten Seite statt verteilen des Inhalts auf benötigte Seiten
@@ -614,6 +618,45 @@ Helper im File \_ViewImports.cshtml registrieren.
 	@{
 		Layout="~/Views/Shared/_Layout.cshtml"
 	}
+\end{lstlisting}
+
+\maintopic{Design \& Canvas}
+Es gibt vor allem SVG, Canvas und WebGL. Wir setzen Fokus auf SVG und Canvas. Canvas wird bei Bing Maps verwendet. Eine Vektor Grafik wird erst vergrössert und dann rasterisiert (umgekehrt eher schwierig). \texttt{Polyline} ist ein Zug von X-Y Punkte, welche mit einer Linie verbunden wird. \texttt{Polygon} stellt sicher dass der erste Punkt und der letzte Punkt abgeschlossen wird (d.h. verbunden). \texttt{Path} ist das mächtigste Werkzeug von Vektor Grafiken. SVGs können als Bild oder als Objekt in HTML eingebunden werden. Als Bild verlieren sie die ganzen interaktionsmöglichkeiten. SVG hat Defaultgrösse von 300px auf 150px (nicht Standardisiert).
+\begin{lstlisting}
+<svg viewBox="0 0 200 200" <!-- x y width height -->
+	preserveAspectRatio="none"> <!-- xMaxYMin, xMidYMid slice/meet -->
+	<style>
+		.alert{ fill:red; }
+	</style>
+	<rect x="0" y="0" width="200" height="200"></rect>
+</svg>
+\end{lstlisting}
+
+\begin{lstlisting}
+<canvas id="painting">Fallback</canvas>
+<script>
+	var painting = document.getElementById("painting");
+	if(painting.getContext) { 
+		var ctx=painting.getContext("2d");
+		ctx.fillRect(0,0,300,150);
+		ctx.translate(50, 50);
+		ctx.scale(2, 4);
+		ctx.rotate(Math.PI);
+	}
+\end{lstlisting}
+\begin{lstlisting}
+let now = performance.now();
+let length = 6000;
+function paint() {
+	ctx.clearRect(0, 0, painting.width, painting.height);
+	ctx.save();
+	ctx.translate(100,100);
+	ctx.rotate((timestamp-now) % length / length) * 2 * Math.PI);
+	ctx.fillRect(-50, -10, 100, 20);
+	ctx.restore();
+	window.requestAnimationFrame(paint);
+}
+window.requestAnimationFrame(paint); // Starts everything
 \end{lstlisting}
 
 % Add white spaces inside the verbatim tag if you need to waste space (to keep the layout tidy).
