@@ -22,6 +22,8 @@
 \usepackage[none]{hyphenat}
 \sloppy
 
+\usepackage{titlesec}
+
 \usepackage{graphicx}
 
 \usepackage[ngerman]{babel}
@@ -200,8 +202,9 @@
 \setlength{\topsep}{4px} %Platz sparen bei Titeln
 %\setlength{\parsep}{-20mm}
 
-\raggedbottom %whitespace am Ende der letzten Seite statt verteilen des Inhalts auf benötigte Seiten
+\titlespacing*{\subparagraph} {0pt}{0.7ex plus 1ex minus .2ex}{0.5ex plus .2ex}
 
+\raggedbottom %whitespace am Ende der letzten Seite statt verteilen des Inhalts auf benötigte Seiten
 
 \titletopic{WED3 Zusammenfassung \qquad \today \\ HSR FS17}
 %\qquad \LaTeX{} Design Martin Stypinski
