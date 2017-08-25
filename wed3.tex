@@ -30,22 +30,16 @@
 %\usepackage{epsfig}
 % um eps-einzubinden
 \usepackage[landscape]{geometry}
-
 \usepackage{array}
-
 \usepackage[fleqn]{amsmath}
 %\usepackage{marvosym}
 %\uspackage{amsopn}
 
 \usepackage{color}
 \usepackage{tabularx}
-
 \usepackage{fancyvrb} %\usepackage{fancybox}
-
 \usepackage{lmodern}
-
 \usepackage{framed}
-
 \usepackage{listings}             % Include the listings-package
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -161,6 +155,21 @@
     \setlength{\parsep}{0px}  }
 { \end{itemize}                  }
 
+\newenvironment{tight-enumerate}
+{ \begin{enumerate}[leftmargin=*, nosep]
+	\setlength{\itemsep}{0px}
+	\setlength{\parskip}{0px}
+	\setlength{\parsep}{0px} }
+{ \end{enumerate}}
+
+\newenvironment{tight-multicols}[1]{%
+	\setlength{\columnsep}{1px}%
+	\setlength{\columnseprule}{0px}%
+	\setlength{\multicolsep}{0px}
+	\begin{multicols}{#1}
+	}
+{ \end{multicols}}
+
 \oddsidemargin-2.2cm
 \evensidemargin-2.2cm
 \textwidth29cm
@@ -197,7 +206,7 @@
 \titletopic{WED3 Zusammenfassung \qquad \today \\ HSR FS17}
 %\qquad \LaTeX{} Design Martin Stypinski
 \maintopic{Introduction of Web}
-\begin{multicols}{2}
+\begin{tight-multicols}{2}
 	\subtopic{Benefits}
 	\begin{tight-itemize}
 		\item{No need for backup} 
@@ -214,7 +223,7 @@
 		\item{No operation system access} 
 		\item{More expensive deployment strategies} 
 	\end{tight-itemize}
-\end{multicols}
+\end{tight-multicols}
 \subtopic{What is Routing?}
 \begin{tight-itemize}
 	\item{Links multiple application parts together}
@@ -288,20 +297,8 @@ ng generate module core
 	\item{\textbf{Metadata}} - Describes a class and tells Angular how to process it.
 	\item{\textbf{Services}} - Provides logic of any value, function or feature that your application needs.
 \end{tight-itemize}
-\subtopic{About Modules}
-\begin{tight-itemize}
-	\item{Every app has at least one Angular module (the \textbf{root} Module)}
-	\item{Modules export features (directives, services, ...) required by other modules}
-	\item{NICHT zu verwechseln mit ES6 Modules (ES6=pro file; Angular=logischer Block von mehreren ES6 Modulen)}
-	\item{Library Modules:}
-	\begin{tight-itemize}
-		\item{May accomodate multiple Angular modules}
-		\item{Contain and export also other facilities (classes, functions, \ldots)}
-		\item{Angular ships as multiple library modules (all with the @angular-prefix)}
-		\item{As an ES6 module, the module library provides single export with all containing features (also known as \textbf{barrel} export)}
-	\end{tight-itemize}
-\end{tight-itemize}
 \subtopic{Modules}
+Modules export features (directives, services, \ldots) required by other modules. NOT to be confused with ES6 Modules (ES6=per-file; Angular=logic block composed of multiple ES6 Modules). Angular ships as multiple library modules (all with the @angular-prefix). As an ES6 module, the module library provides single export wih all containing feature s(also known as \textbf{barrel} export).
 \begin{tight-itemize}
   \item{\textbf{Root Module}} - By convention named AppModule (app.module.ts). Provides the main view, called the root component, that hosts all other app views. Is bootstrapped by the main.ts
   \item{\textbf{Core Module}} - Provides globally required services and components directly needed by the root module. The core module should help keep the Root Module clean. Only the root Module should import the Core Module.
@@ -518,28 +515,30 @@ npm run eject //(Removes this tool and copies build dependencies,
               // If you do this, you can't go back!)
 \end{lstlisting}
 \subtopic{React Lifecycle}
-\begin{tight-itemize}
-	\item Mounting
-	\begin{enumerate}
-		\item \texttt{constructor(props)} - State initialisieren
-		\item \texttt{render()}
-		\item \texttt{componentDidMount()} - DOM aufgebaut, Remote Daten laden, setState führt zu Re-Rendering
-	\end{enumerate}
-	\item Updating
-	\begin{enumerate}
-		\item \texttt{componentWillReceiveProps(nextProps)} - Vorschau auf die nächsten Props.
-		\item \texttt{shouldComponentUpdate(nextProps, nextState)} - wenn \texttt{return false}, wird Rendering übersprungen.
-		\item \texttt{componentWillUpdate(nextProps, nextState)} - selten gebraucht (evtl. Animationen starten)
-		\item \texttt{componentDidUpdate(prevProps, prevState)} - DOM ist aktualisiert.
-	\end{enumerate}
-	\item Unmounting
-	\begin{enumerate}
-		\item \texttt{componentWillUnmount()} - Aufräumen
-	\end{enumerate}
-\end{tight-itemize}
+\begin{tight-multicols}{2}
+	\begin{tight-enumerate}
+		\item Mounting
+		\begin{tight-enumerate}
+			\item \texttt{constructor(props)} - State initialisieren
+			\item \texttt{render()}
+			\item \texttt{componentDidMount()} - DOM aufgebaut, Remote Daten laden, setState führt zu Re-Rendering
+		\end{tight-enumerate}
+		\item Updating
+		\begin{tight-enumerate}
+			\item \texttt{componentWillReceiveProps(nextProps)} - Vorschau auf die nächsten Props.
+			\item \texttt{shouldComponentUpdate(nextProps, nextState)} - wenn \texttt{return false}, wird Rendering übersprungen.
+			\item \texttt{componentWillUpdate(nextProps, nextState)} - selten gebraucht (evtl. Animationen starten)
+			\item \texttt{componentDidUpdate(prevProps, prevState)} - DOM ist aktualisiert.
+		\end{tight-enumerate}
+		\item Unmounting
+		\begin{tight-enumerate}
+			\item \texttt{componentWillUnmount()} - Aufräumen
+		\end{tight-enumerate}
+	\end{tight-enumerate}
+\end{tight-multicols}
 \subtopic{Container vs Presentation Component}
 Trenne die Präsentation von der Logik. Anstatt eine Komponente zu bauen, die sowohl den Lifecycle und die Rechenarbeit macht, wie auch die Daten darstellt, baue zwei Komponenten. Meistens ist die Präsentationskomponente eine reine Funktion und die Container Komponente eine Klasse.
-\maintopic{Redux}
+\subtopic{Redux}
 Bei grösseren Anwendungen kommt oft Redux (Predictable State Container) zum Einsatz. Der State wird als Tree von Objekten dargestellt. Ein Tree für die gesamte Applikation! Alle Veränderungen am Tree führen zu einem neuen Tree (immutable). State wird im sogenannten \textbf{Store} verwaltet.
 \maintopic{ASP.NET (Core)}
 ASP.NET ist eine der am weitesten verbreiteten Technologien für das Erstellen von Websites.
